@@ -112,4 +112,14 @@ public class Medico {
     public void setValorHora(double valorHora) {
         this.valorHora = valorHora;
     }
+
+    /**
+     * Metodo para Mostrar a Informação do Médico
+     * @return
+     */
+    @Override
+    public String toString() {
+        return "Médico: " + nome + " | Esp: " + especialidade +
+                " | Horário: " + horaEntrada + "h - " + horaSaida + "h";
+    }
 }
