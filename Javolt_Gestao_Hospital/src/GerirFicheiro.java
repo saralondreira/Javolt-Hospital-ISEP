@@ -1,7 +1,6 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.FileNotFoundException;
 
 public class GerirFicheiro {
 
@@ -20,30 +19,31 @@ public class GerirFicheiro {
                 linhas++;
             }
             br.close();
-            } catch (IOException e){
-            System.out.println("Erro ao ler ficheiro para contagem: " + e.getMessage());
+        } catch (IOException e) {
             return 0;
         }
         return linhas;
     }
 
+
     /**
-     * Lê um ficheiro de texto e devolve um array de Strings,
-     * onde cada posição do array é uma linha do ficheiro.
+     * Lê o ficheiro e devolve uma MATRIZ (Tabela), onde:
+     * [i] = linha
+     * [j] = coluna (dado separado por ;)
      */
 
-    public static String[] lerFicheiro(String nomeFicheiro) {
+    public static String[][] lerFicheiro(String nomeFicheiro) {
 
         // 1. Descobrir o tamanho necessário
         int totalLinhas = contarLinhas(nomeFicheiro);
 
         // Se o ficheiro estiver vazio ou der erro, devolve array vazio
         if (totalLinhas == 0) {
-            return new String[0];
+            return new String[0][0];
         }
 
-        // 2. Criar o array com o tamanho exato
-        String[] dados = new String[totalLinhas];
+        // Criamos uma matriz: Linhas vs Colunas
+        String[][] tabelaDados = new String[totalLinhas][];
 
         try {
 
@@ -56,17 +56,17 @@ public class GerirFicheiro {
 
             // 4. Preencher o array
             while ((linha = br.readLine()) != null) {
-                dados[i] = linha;
+                // AQUI fazemos logo o split
+                // Guardamos o array resultante na posição i da matriz
+                tabelaDados[i] = linha.split(";");
                 i++;
             }
 
             br.close();
 
-        }catch (FileNotFoundException e){
-            System.out.println("Ficheiro não encontrado: " + nomeFicheiro);
-        }catch (IOException e) {
+        } catch (IOException e) {
             System.out.println("Erro de leitura: " + e.getMessage());
         }
-        return dados;
+        return tabelaDados;
     }
 }
