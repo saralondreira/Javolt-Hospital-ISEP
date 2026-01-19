@@ -1,11 +1,61 @@
+package Serviços;
+
+import Entidades.Medico;
+import Entidades.Paciente;
+import Ficheiros.GestorFicheiros;
+import Ficheiros.LeitorFicheiros;
+
 public class GestaoHospital {
+
+// ================== GESTAO DOS FICHEIROS ==================
+    private Medico[] medicos;
+    private Paciente[] pacientes;
+    private Sintoma[] sintomas;
+    private Especialidade[] especialidades;
+
+    private LeitorFicheiros leitor;
+    private GestorFicheiros gestor;
+
+    // ================== CONSTRUTOR ==================
+    public GestaoHospital() {
+
+        leitor = new LeitorFicheiros(";");
+        gestor = new GestorFicheiros(";");
+
+        especialidades = leitor.lerEspecialidades("especialidades.txt");
+        medicos = leitor.lerMedicos("medicos.txt");
+        sintomas = leitor.lerSintomas("sintomas.txt");
+
+        gestor.escreverLog("logs.txt", "Sistema iniciado com sucesso");
+    }
+
+    public void listarMedicos() {
+
+        if (medicos == null || medicos.length == 0) {
+            System.out.println("Não existem médicos carregados.");
+            return;
+        }
+
+        System.out.println("=== LISTA DE MÉDICOS ===");
+
+        for (int i = 0; i < medicos.length; i++) {
+            System.out.println(medicos[i]); // usa o toString()
+        }
+    }
+
+
+
+
+
+
+
+    // ==========================================================================================
 
     // confirmar as variaveis usadas
     public static int unidadeTempoAtual = 0; // O nosso relógio
 
     public static Medico[] listaMedicos = new Medico[50];
     public static int totalMedicos = 0; // Quantos médicos existem na lista
-
     public static Paciente[] filaEspera = new Paciente[100];
     public static int totalPacientes = 0; // Quantos pacientes estão na fila
 
@@ -185,8 +235,8 @@ public class GestaoHospital {
         };
     }
 
-    // Classe de dados
-    public static class Medico {
+    /*Classe de dados
+    public static class Entidades.Medico {
         String nome, especialidade;
         int horaEntrada, horaSaida;
         boolean disponivel = false;      // Está no hospital?
@@ -195,10 +245,11 @@ public class GestaoHospital {
         int horasSeguidasTrabalho = 0;   // Contador de cansaço
         int tempoRestanteConsulta = 0;   // Quanto falta para acabar consulta
         int tempoDescansoRestante = 0;   // Quanto falta para acabar descanso
-    }
+    }*/
 
-    public static class Paciente {
+    /*public static class Entidades.Paciente {
         String nome, nivelUrgencia, especialidadeDesejada;
         int tempoEspera = 0;
+    }*/
+
     }
-}

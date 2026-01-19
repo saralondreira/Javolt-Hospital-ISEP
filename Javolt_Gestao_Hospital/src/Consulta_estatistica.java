@@ -1,3 +1,6 @@
+import Entidades.Medico;
+import Entidades.Paciente;
+
 public class Consulta_estatistica {
 
     /* ==============================

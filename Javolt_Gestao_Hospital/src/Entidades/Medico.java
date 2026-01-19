@@ -1,3 +1,5 @@
+package Entidades;
+
 /**
  * Representa um Médico
  * @author Grupo 1 - Javolt (Levi, Sara, Leonardo, Micael)

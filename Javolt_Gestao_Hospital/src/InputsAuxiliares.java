@@ -1,3 +1,6 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Scanner;
 
 public class InputsAuxiliares {
@@ -218,5 +221,27 @@ public static boolean lerSimNao(String msg) {
     }
 }
 
+    // ================= CONTAR LINHAS =================
+    public class FicheiroUtils {
 
+        protected String separador;
+
+        public FicheiroUtils(String separador) {
+            this.separador = separador;
+        }
+
+        protected int contarLinhas(String caminho) {
+            int total = 0;
+
+            try (BufferedReader br = new BufferedReader(new FileReader(caminho))) {
+                while (br.readLine() != null) {
+                    total++;
+                }
+            } catch (IOException e) {
+                System.out.println("Erro ao contar linhas: " + e.getMessage());
+            }
+
+            return total;
+        }
+    }
 }

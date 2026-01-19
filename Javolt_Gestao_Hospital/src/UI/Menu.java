@@ -1,3 +1,7 @@
+package UI;
+
+import Serviços.GestaoHospital;
+
 import java.util.Scanner;
 
 public class Menu {
@@ -33,7 +37,11 @@ public class Menu {
             }
 
             }while (opcao !=0);
-        }
+
+        GestaoHospital gh = new GestaoHospital();
+        gh.listarMedicos();
+
+    }
 
         private static void mostrarMenuPrincipal(){
             System.out.println("\n=== SISTEMA DE GESTÃO DO HOSPITAL ===");
