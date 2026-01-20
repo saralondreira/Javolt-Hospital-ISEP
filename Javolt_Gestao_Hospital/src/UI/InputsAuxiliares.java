@@ -1,249 +1,298 @@
 package UI;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.Scanner;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 public class InputsAuxiliares {
+    private static final Scanner scanner = new Scanner(System.in);
+    private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
 
-    private static Scanner scanner = new Scanner(System.in);
+    // ================== MÉTODOS BÁSICOS ==================
 
     /**
-     * Lê a opção introduzida do menu
+     * Lê opção do menu com validação
      */
     public static int lerOpcaoMenu(String msg) {
-        while (true) {
-            exibirPrompt(msg);
-            String input = scanner.nextLine().trim();
-
-            try {
-                return Integer.parseInt(input);
-            } catch (NumberFormatException e) {
-                exibirErro("Valor inválido. Tente novamente.")
-            }
+        System.out.print(msg);
+        while (!scanner.hasNextInt()) {
+            System.out.println(">> Valor inválido. Insira um número.");
+            scanner.next();
+            System.out.print(msg);
         }
+        int valor = scanner.nextInt();
+        scanner.nextLine();
+        return valor;
     }
 
     /**
      * Lê texto simples
      */
     public static String lerTexto(String msg) {
-        exibirPrompt(msg);
+        System.out.print(msg);
         return scanner.nextLine().trim();
     }
 
     /**
-     * Lê texto com validação de não vazio
+     * Lê texto não vazio
      */
     public static String lerTextoNaoVazio(String msg) {
         while (true) {
-            exibirPrompt(msg);
+            System.out.print(msg);
             String input = scanner.nextLine().trim();
 
             if (input.isEmpty()) {
-                exibirErro("O campo não pode estar vazio.");
+                System.out.println(">> ERRO: O campo não pode estar vazio.");
                 continue;
             }
             return input;
         }
     }
 
-    /**
-     * Lê texto com validação (usa "0" para cancelar).
-     *
-     * @param msg mensagem a mostrar
-     * @return texto ou null se cancelado
-     */
-    public static String lerTextoComCancelamento(String msg) {
-        System.out.println("(Prima 0 para cancelar)");
+    // ================== LEITURA DE NÚMEROS ==================
 
+    /**
+     * Lê inteiro com cancelamento
+     */
+    public static int lerInteiro(String msg) {
         while (true) {
-            exibirPrompt(msg);
+            System.out.print(msg + " (0 para cancelar): ");
             String input = scanner.nextLine().trim();
 
-            //Cancelamento com "0"
             if (input.equals("0")) {
-                lerSimNao("Deseja cancelar a operação?");
-            }
-            System.out.println("Operação continuada.");
-            continue;
-        }
-
-        if (input.isEmpty()) {
-            exibirErro("O campo não pode estar vazio.");
-            continue;
-        }
-
-        return input;
-    }
-
-
-/**
- * Lê inteiro com validação (usa "0" para cancelar).
- *
- * @param msg mensagem a mostrar
- * @return inteiro válido
- */
-public static String lerInteiro(String msg) {
-    while (true) {
-        System.out.println(msg);
-        try {
-            return Integer.parseInt(scanner.nextLine().trim());
-        } catch (NumberFormatException e) {
-            System.out.println("Erro: Valor inválido. Insira um número inteiro.");
-        }
-    }
-}
-
-/**
- * Lê inteiro dentro de um intervalo.
- *
- * @param msg mensagem a mostrar
- * @param min valor mínimo
- * @param max valor máximo
- * @return inteiro no intervalo
- */
-public static int lerInteiroIntervalo(String msg, int min, int max) {
-    while (true) {
-        int valor = lerInteiro(msg);
-
-        if (valor >= min && valor <= max) {
-            return valor;
-        }
-        System.out.println("Erro: O valor deve estar entre " + min + " e " + max + ".");
-    }
-}
-
-/**
- * Lê inteiro com CANCELAMENTO.
- *
- * @param msg mensagem a mostrar
- * @return inteiro ou Integer.MIN_VALUE se cancelado
- */
-public static int lerInteiroComCancelamento(String msg) {
-    System.out.println("(Prima 0 para cancelar)");
-    while (true) {
-        System.out.println(msg);
-        String input = scanner.nextLine().trim();
-
-        if (input.equals("0")) {
-            System.out.println("Deseja cancelar a operação? (S/N): ");
-            if (scanner.nextLine().equalsIgnoreCase("S")) {
-                return Integer.MIN_VALUE;
-            }
-            System.out.println("Operação continuada.");
-            continue;
-        }
-
-        try {
-            return Integer.parseInt(input);
-        } catch (NumberFormatException e) {
-            System.out.println("Erro: Valor inválido. Insira um número inteiro");
-        }
-    }
-}
-
-/**
- * Lê double com validação.
- *
- * @param msg mensagem a mostrar
- * @return double válido
- */
-public static double lerDouble(String msg) {
-    while (true) {
-        System.out.println(msg);
-        try {
-            return Double.parseDouble(scanner.nextLine().trim());
-        } catch (NumberFormatException e) {
-            System.out.println("Erro: Valor inválido. Insira um número.");
-        }
-    }
-}
-
-/**
- * Lê double com CANCELAMENTO.
- *
- * @param msg mensagem a mostrar
- * @return double ou Double.MIN_VALUE se cancelado
- */
-public static double lerDoubleComCancelamento(String msg) {
-    System.out.println("(Prima 0 para cancelar)");
-    while (true) {
-        System.out.println(msg);
-        String input = scanner.nextLine().trim();
-
-        if (input.equals("0")) {
-            lerSimNao("Deseja cancelar a operação?");
-            if (scanner.nextLine().equalsIgnoreCase("S")) {
-                return Double.MIN_VALUE;
-            }
-            System.out.println("Operação continuada.");
-            continue;
-        }
-        try {
-            return Double.parseDouble(input);
-        } catch (NumberFormatException e) {
-            System.out.println("Erro: Valor inválido. Insira um número.");
-        }
-    }
-}
-
-/**
- * Lê um caracter (apenas primeiro caractere).
- *
- * @param msg mensagem a mostrar
- * @return caractere inserido
- */
-public static char lerChar(String msg) {
-    while (true) {
-        System.out.println(msg);
-        String input = scanner.nextLine().trim();
-
-        if (input.length() == 1) {
-            return input.charAt(0);
-        }
-        System.out.println("Erro: Insira apenas um caractere.");
-    }
-}
-
-public static boolean lerSimNao(String msg) {
-    while (true) {
-        System.out.println(msg + " (S/N): ");
-        String input = scanner.nextLine().trim().toUpperCase();
-
-        if (input.equals("S") || input.equals("SIM")) {
-            return true;
-        }
-        if (input.equals("N") || input.equals("NAO") || input.equals("NÃO")) {
-            return false;
-        }
-
-        System.out.println("Erro: Responda com S (Sim) ou N (Não).");
-    }
-}
-
-    // ================= CONTAR LINHAS =================
-    public class FicheiroUtils {
-
-        protected String separador;
-
-        public FicheiroUtils(String separador) {
-            this.separador = separador;
-        }
-
-        protected int contarLinhas(String caminho) {
-            int total = 0;
-
-            try (BufferedReader br = new BufferedReader(new FileReader(caminho))) {
-                while (br.readLine() != null) {
-                    total++;
+                if (confirmar("Deseja cancelar a operação?")) {
+                    return Integer.MIN_VALUE; // Valor especial para cancelamento
                 }
-            } catch (IOException e) {
-                System.out.println("Erro ao contar linhas: " + e.getMessage());
+                continue;
             }
 
-            return total;
+            try {
+                return Integer.parseInt(input);
+            } catch (NumberFormatException e) {
+                System.out.println(">> ERRO: Insira um número inteiro válido.");
+            }
         }
+    }
+
+    /**
+     * Lê inteiro dentro de intervalo
+     */
+    public static int lerInteiroIntervalo(String msg, int min, int max) {
+        while (true) {
+            int valor = lerInteiro(msg);
+
+            if (valor == Integer.MIN_VALUE) {
+                return valor; // Cancelado
+            }
+
+            if (valor >= min && valor <= max) {
+                return valor;
+            }
+
+            System.out.println(">> ERRO: O valor deve estar entre " + min + " e " + max + ".");
+        }
+    }
+
+    /**
+     * Lê número decimal com cancelamento
+     */
+    public static double lerDouble(String msg) {
+        while (true) {
+            System.out.print(msg + " (0 para cancelar): ");
+            String input = scanner.nextLine().trim();
+
+            if (input.equals("0")) {
+                if (confirmar("Deseja cancelar a operação?")) {
+                    return Double.MIN_VALUE; // Valor especial para cancelamento
+                }
+                continue;
+            }
+
+            try {
+                return Double.parseDouble(input);
+            } catch (NumberFormatException e) {
+                System.out.println(">> ERRO: Insira um número decimal válido.");
+            }
+        }
+    }
+
+    // ================== LEITURA DE CARACTERES ==================
+
+    /**
+     * Lê um único caractere
+     */
+    public static char lerChar(String msg) {
+        while (true) {
+            System.out.print(msg);
+            String input = scanner.nextLine().trim();
+
+            if (input.length() == 1) {
+                return input.charAt(0);
+            }
+
+            System.out.println(">> ERRO: Insira apenas um caractere.");
+        }
+    }
+
+    /**
+     * Lê caractere separador (ex: ; , | TAB)
+     */
+    public static char lerSeparador(String msg) {
+        System.out.println("Separadores disponíveis:");
+        System.out.println(";  - Ponto e vírgula");
+        System.out.println(",  - Vírgula");
+        System.out.println("|  - Pipe");
+        System.out.println("\\t - Tabulação (TAB)");
+
+        while (true) {
+            System.out.print(msg + ": ");
+            String input = scanner.nextLine().trim();
+
+            if (input.equalsIgnoreCase("\\t") || input.equalsIgnoreCase("TAB")) {
+                return '\t';
+            }
+
+            if (input.length() == 1) {
+                char separador = input.charAt(0);
+                if (separador == ';' || separador == ',' || separador == '|') {
+                    return separador;
+                }
+            }
+
+            System.out.println(">> ERRO: Separador inválido. Use ; , | ou TAB");
+        }
+    }
+
+    // ================== LEITURA DE DATAS ==================
+
+    /**
+     * Lê data e hora
+     */
+    public static LocalDateTime lerData(String msg) {
+        while (true) {
+            System.out.print(msg + " (formato: dd-MM-yyyy HH:mm, 0 para cancelar): ");
+            String input = scanner.nextLine().trim();
+
+            if (input.equals("0")) {
+                return null; // Cancelar
+            }
+
+            try {
+                return LocalDateTime.parse(input, dateTimeFormatter);
+            } catch (DateTimeParseException e) {
+                System.out.println(">> ERRO: Formato inválido. Use dia-mes-ano hora:minuto");
+            }
+        }
+    }
+
+    // ================== CONFIRMAÇÕES ==================
+
+    /**
+     * Confirmação Sim/Não
+     */
+    public static boolean confirmar(String pergunta) {
+        while (true) {
+            System.out.print(pergunta + " (S/N): ");
+            String resposta = scanner.nextLine().trim().toUpperCase();
+
+            if (resposta.equals("S") || resposta.equals("SIM")) {
+                return true;
+            }
+
+            if (resposta.equals("N") || resposta.equals("NAO") || resposta.equals("NÃO")) {
+                return false;
+            }
+
+            System.out.println(">> Responda com S (Sim) ou N (Não)");
+        }
+    }
+
+    /**
+     * Versão antiga mantida para compatibilidade
+     */
+    public static boolean lerSimNao(String msg) {
+        return confirmar(msg);
+    }
+
+    // ================== FORMATAÇÃO E EXIBIÇÃO ==================
+
+    public static void imprimirCabecalho(String titulo) {
+        int tamanhoFixo = 50;
+
+        System.out.println();
+        imprimirLinha();
+
+        int espacos = tamanhoFixo - titulo.length() - 2;
+        int esquerda = espacos / 2;
+        int direita = espacos - esquerda;
+
+        System.out.print("|");
+        for (int i = 0; i < esquerda; i++) System.out.print(" ");
+        System.out.print(titulo.toUpperCase());
+        for (int i = 0; i < direita; i++) System.out.print(" ");
+        System.out.println("|");
+
+        imprimirLinha();
+    }
+
+    public static void imprimirLinha() {
+        System.out.print("|");
+        for (int i = 0; i < 50; i++) System.out.print("-");
+        System.out.println("|");
+    }
+
+    public static void imprimirTitulo(String titulo) {
+        System.out.println("\n--- " + titulo.toUpperCase() + " ---");
+    }
+
+    public static void exibirMsgCancelar() {
+        System.out.println("(Prima 0 em qualquer momento para cancelar)");
+    }
+
+    public static void imprimirErro(String mensagem) {
+        System.out.println(">> ERRO: " + mensagem);
+    }
+
+    public static void imprimirAviso(String mensagem) {
+        System.out.println(">> " + mensagem);
+    }
+
+    public static void imprimirSucesso(String mensagem) {
+        System.out.println(">> ✓ " + mensagem);
+    }
+
+    public static void limparTela() {
+        for (int i = 0; i < 50; i++) {
+            System.out.println();
+        }
+    }
+
+    public static void pausar() {
+        System.out.print("\nPrima Enter para continuar...");
+        scanner.nextLine();
+    }
+
+    // ================== MÉTODOS COMPATIBILIDADE ==================
+
+    /**
+     * Método compatível com Menu.java (ler int simples)
+     */
+    public static int lerInt(String msg) {
+        return lerInteiro(msg);
+    }
+
+    /**
+     * Método compatível com Menu.java (ler string simples)
+     */
+    public static String lerString(String msg) {
+        return lerTexto(msg);
+    }
+
+    /**
+     * Método compatível para pausa no Menu
+     */
+    public static void pausa() {
+        pausar();
     }
 }

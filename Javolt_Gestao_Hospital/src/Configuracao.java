@@ -1,3 +1,5 @@
+package Entidades;
+
 public class Configuracao {
 
     private String caminhoFicheiros;
