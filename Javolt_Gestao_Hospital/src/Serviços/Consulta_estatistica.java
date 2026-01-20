@@ -1,5 +1,8 @@
+package Serviços;
+
 import Entidades.Medico;
 import Entidades.Paciente;
+import Entidades.Especialidade;
 
 public class Consulta_estatistica {
 
@@ -36,11 +39,14 @@ public class Consulta_estatistica {
         int contador = 0;
 
         for (int i = 0; i < totalPacientes; i++) {
-            String[] sintomas = pacientes[i].getSintomas();
+            // CORREÇÃO 1: Alterar de String[] para Sintoma[]
+            Entidades.Sintoma[] sintomas = pacientes[i].getSintomas();
+
             int totalSintomas = pacientes[i].getTotalSintomas();
 
             for (int j = 0; j < totalSintomas; j++) {
-                if (sintomas[j].equalsIgnoreCase(sintoma)) {
+                // CORREÇÃO 2: Aceder a .getNome() antes de comparar
+                if (sintomas[j].getNome().equalsIgnoreCase(sintoma)) {
                     contador++;
                 }
             }
@@ -60,7 +66,7 @@ public class Consulta_estatistica {
 
         // Contar pacientes por especialidade
         for (int i = 0; i < totalPacientes; i++) {
-            String espPaciente = pacientes[i].getEspecialidadeAtribuida();
+            String espPaciente = pacientes[i].getEspecialidadeDesejada();
 
             if (espPaciente == null) continue;
 

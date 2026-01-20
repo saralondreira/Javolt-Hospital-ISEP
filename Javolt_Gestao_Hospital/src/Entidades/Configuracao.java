@@ -27,9 +27,7 @@ public class Configuracao {
     public static final int TEMPO_MEDIA_PARA_URGENTE_DEFAULT = 3;
     public static final int TEMPO_URGENTE_PARA_SAIDA_DEFAULT = 2;
 
-    // Construtor vazio
     public Configuracao() {
-        // Inicializar com valores padrão
         this.caminhoFicheiros = CAMINHO_DEFAULT;
         this.separador = SEPARADOR_DEFAULT;
         this.password = PASSWORD_DEFAULT;
@@ -43,177 +41,24 @@ public class Configuracao {
         this.tempoUrgenteParaSaida = TEMPO_URGENTE_PARA_SAIDA_DEFAULT;
     }
 
-    // Construtor com parâmetros (remover duplicação de inicialização)
-    public Configuracao(String caminhoFicheiros, char separador, int tempoConsultaBaixa,
-                        int tempoConsultaMedia, int tempoConsultaUrgente,
-                        int horasTrabalhoParaDescanso, int unidadesDescanso,
-                        int tempoBaixaParaMedia, int tempoMediaParaUrgente,
-                        int tempoUrgenteParaSaida, String password) {
+    // Getters
+    public String getCaminhoFicheiros() { return caminhoFicheiros; }
+    public char getSeparador() { return separador; }
+    public int getTempoConsultaBaixa() { return tempoConsultaBaixa; }
+    public int getTempoConsultaMedia() { return tempoConsultaMedia; }
+    public int getTempoConsultaUrgente() { return tempoConsultaUrgente; }
+    public int getTempoBaixaParaMedia() { return tempoBaixaParaMedia; }
+    public int getTempoMediaParaUrgente() { return tempoMediaParaUrgente; }
 
-        // Usar setters para validação
-        setCaminhoFicheiros(caminhoFicheiros);
-        setSeparador(separador);
-        setTempoConsultaBaixa(tempoConsultaBaixa);
-        setTempoConsultaMedia(tempoConsultaMedia);
-        setTempoConsultaUrgente(tempoConsultaUrgente);
-        setHorasTrabalhoParaDescanso(horasTrabalhoParaDescanso);
-        setUnidadesDescanso(unidadesDescanso);
-        setTempoBaixaParaMedia(tempoBaixaParaMedia);
-        setTempoMediaParaUrgente(tempoMediaParaUrgente);
-        setTempoUrgenteParaSaida(tempoUrgenteParaSaida);
+    // Setters
+    public void setCaminhoFicheiros(String caminho) { this.caminhoFicheiros = caminho; }
+    public void setSeparador(char separador) { this.separador = separador; }
+    public void setTempoConsultaBaixa(int t) { this.tempoConsultaBaixa = t; }
+    public void setTempoConsultaMedia(int t) { this.tempoConsultaMedia = t; }
+    public void setTempoConsultaUrgente(int t) { this.tempoConsultaUrgente = t; }
 
-        // Password com validação
-        if (password == null || password.trim().isEmpty()) {
-            this.password = PASSWORD_DEFAULT;
-        } else {
-            this.password = password;
-        }
-    }
-
-    // ================== GETTERS ==================
-    public String getCaminhoFicheiros() {
-        return caminhoFicheiros;
-    }
-
-    public char getSeparador() {
-        return separador;
-    }
-
-    public int getTempoConsultaBaixa() {
-        return tempoConsultaBaixa;
-    }
-
-    public int getTempoConsultaMedia() {
-        return tempoConsultaMedia;
-    }
-
-    public int getTempoConsultaUrgente() {
-        return tempoConsultaUrgente;
-    }
-
-    public int getHorasTrabalhoParaDescanso() {
-        return horasTrabalhoParaDescanso;
-    }
-
-    public int getUnidadesDescanso() {
-        return unidadesDescanso;
-    }
-
-    public int getTempoBaixaParaMedia() {
-        return tempoBaixaParaMedia;
-    }
-
-    public int getTempoMediaParaUrgente() {
-        return tempoMediaParaUrgente;
-    }
-
-    public int getTempoUrgenteParaSaida() {
-        return tempoUrgenteParaSaida;
-    }
-
-    // ================== SETTERS ==================
-    public void setCaminhoFicheiros(String caminhoFicheiros) {
-        if (caminhoFicheiros == null || caminhoFicheiros.trim().isEmpty()) {
-            throw new IllegalArgumentException("Caminho não pode ser vazio.");
-        }
-        if (!caminhoFicheiros.endsWith("/") && !caminhoFicheiros.endsWith("\\")) {
-            caminhoFicheiros += "/";
-        }
-        this.caminhoFicheiros = caminhoFicheiros;
-    }
-
-    public void setSeparador(char separador) {
-        this.separador = separador;
-    }
-
-    public void setTempoConsultaBaixa(int tempoConsultaBaixa) {
-        if (tempoConsultaBaixa <= 0) {
-            throw new IllegalArgumentException("Tempo deve ser positivo");
-        }
-        this.tempoConsultaBaixa = tempoConsultaBaixa;
-    }
-
-    public void setTempoConsultaMedia(int tempoConsultaMedia) {
-        if (tempoConsultaMedia <= 0) {
-            throw new IllegalArgumentException("Tempo deve ser positivo");
-        }
-        this.tempoConsultaMedia = tempoConsultaMedia;
-    }
-
-    public void setTempoConsultaUrgente(int tempoConsultaUrgente) {
-        if (tempoConsultaUrgente <= 0) {
-            throw new IllegalArgumentException("Tempo deve ser positivo");
-        }
-        this.tempoConsultaUrgente = tempoConsultaUrgente;
-    }
-
-    public void setHorasTrabalhoParaDescanso(int horasTrabalhoParaDescanso) {
-        if (horasTrabalhoParaDescanso <= 0) {
-            throw new IllegalArgumentException("Horas devem ser positivas");
-        }
-        this.horasTrabalhoParaDescanso = horasTrabalhoParaDescanso;
-    }
-
-    public void setUnidadesDescanso(int unidadesDescanso) {
-        if (unidadesDescanso <= 0) {
-            throw new IllegalArgumentException("Unidades devem ser positivas");
-        }
-        this.unidadesDescanso = unidadesDescanso;
-    }
-
-    public void setTempoBaixaParaMedia(int tempoBaixaParaMedia) {
-        if (tempoBaixaParaMedia <= 0) {
-            throw new IllegalArgumentException("Tempo deve ser positivo");
-        }
-        this.tempoBaixaParaMedia = tempoBaixaParaMedia;
-    }
-
-    public void setTempoMediaParaUrgente(int tempoMediaParaUrgente) {
-        if (tempoMediaParaUrgente <= 0) {
-            throw new IllegalArgumentException("Tempo deve ser positivo");
-        }
-        this.tempoMediaParaUrgente = tempoMediaParaUrgente;
-    }
-
-    public void setTempoUrgenteParaSaida(int tempoUrgenteParaSaida) {
-        if (tempoUrgenteParaSaida <= 0) {
-            throw new IllegalArgumentException("Tempo deve ser positivo");
-        }
-        this.tempoUrgenteParaSaida = tempoUrgenteParaSaida;
-    }
-
-    // ================== PASSWORD METHODS ==================
+    // Password
     public boolean verificarPassword(String tentativa) {
         return this.password != null && this.password.equals(tentativa);
-    }
-
-    public boolean alterarPassword(String passwordAntiga, String passwordNova) {
-        if (verificarPassword(passwordAntiga)) {
-            if (passwordNova == null || passwordNova.trim().isEmpty()) {
-                throw new IllegalArgumentException("Nova password não pode ser vazia");
-            }
-            if (passwordNova.length() < 4) {
-                throw new IllegalArgumentException("Password deve ter pelo menos 4 caracteres");
-            }
-            this.password = passwordNova;
-            return true;
-        }
-        return false;
-    }
-
-    // ================== toString ==================
-    @Override
-    public String toString() {
-        return "Configurações do Sistema:\n" +
-                "Caminho dos ficheiros: " + caminhoFicheiros + "\n" +
-                "Separador: " + separador + "\n" +
-                "Tempo consulta Baixa: " + tempoConsultaBaixa + " UT\n" +
-                "Tempo consulta Média: " + tempoConsultaMedia + " UT\n" +
-                "Tempo consulta Urgente: " + tempoConsultaUrgente + " UT\n" +
-                "Descanso: " + unidadesDescanso + " UT a cada " +
-                horasTrabalhoParaDescanso + " UT trabalho\n" +
-                "Baixa -> Média: " + tempoBaixaParaMedia + " UT\n" +
-                "Média -> Urgente: " + tempoMediaParaUrgente + " UT\n" +
-                "Urgente -> Saída: " + tempoUrgenteParaSaida + " UT\n";
     }
 }

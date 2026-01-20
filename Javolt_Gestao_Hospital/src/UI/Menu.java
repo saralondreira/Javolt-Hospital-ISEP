@@ -1,7 +1,6 @@
 package UI;
 
 import Serviços.GestaoHospital;
-import UI.InputsAuxiliares;
 
 public class Menu {
 
@@ -20,11 +19,27 @@ public class Menu {
         InputsAuxiliares.imprimirLinha();
 
         int opcao;
-        // ... resto do código
+
+        do {
+            // Mostrar menu e ler opção
+            opcao = menuPrincipal();
+
+            switch (opcao) {
+                case 1 -> menuGestaoHospital();
+                case 2 -> menuEstatisticas();
+                case 3 -> menuConfiguracoes();
+                case 0 -> {
+                    System.out.println("\nObrigado por utilizar o sistema Javolt.");
+                    System.out.println("A encerrar...");
+                }
+                default -> InputsAuxiliares.imprimirErro("Opção inválida.");
+            }
+
+        } while (opcao != 0);
     }
 
-    // Substituir os System.out.println simples por formatação melhor
     private int menuPrincipal() {
+        InputsAuxiliares.limparTela(); // Limpar antes de mostrar o menu
         InputsAuxiliares.imprimirCabecalho("MENU PRINCIPAL");
         System.out.println("|   1 - Gestão do Hospital                |");
         System.out.println("|   2 - Estatísticas                      |");
@@ -40,26 +55,40 @@ public class Menu {
         int opcao;
 
         do {
-            System.out.println("\n===== GESTÃO DO HOSPITAL =====");
-            System.out.println("1 - Registar paciente");
-            System.out.println("2 - Avançar tempo");
+            InputsAuxiliares.limparTela();
+            InputsAuxiliares.imprimirCabecalho("GESTÃO DO HOSPITAL");
+            System.out.println("1 - Registar paciente (Triagem)");
+            System.out.println("2 - Avançar tempo (Processar filas)");
             System.out.println("3 - Listar médicos");
             System.out.println("4 - Listar pacientes");
             System.out.println("0 - Voltar");
+            InputsAuxiliares.imprimirLinha();
 
             opcao = InputsAuxiliares.lerInt("Opção: ");
 
             switch (opcao) {
-                case 1 -> gestaoHospital.registarPaciente();
-                case 2 -> gestaoHospital.avancarTempo();
-                case 3 -> gestaoHospital.listarMedicos();
-                case 4 -> gestaoHospital.listarPacientes();
-                case 0 -> System.out.println("A voltar ao menu principal...");
-                default -> System.out.println("Opção inválida.");
+                case 1 -> {
+                    gestaoHospital.registarPaciente();
+                    pausa();
+                }
+                case 2 -> {
+                    gestaoHospital.avancarTempo();
+                    pausa();
+                }
+                case 3 -> {
+                    gestaoHospital.listarMedicos();
+                    pausa();
+                }
+                case 4 -> {
+                    gestaoHospital.listarPacientes();
+                    pausa();
+                }
+                case 0 -> { /* Voltar */ }
+                default -> {
+                    InputsAuxiliares.imprimirErro("Opção inválida.");
+                    pausa();
+                }
             }
-
-            pausa();
-
         } while (opcao != 0);
     }
 
@@ -69,11 +98,13 @@ public class Menu {
         int opcao;
 
         do {
-            System.out.println("\n===== ESTATÍSTICAS =====");
+            InputsAuxiliares.limparTela();
+            InputsAuxiliares.imprimirCabecalho("ESTATÍSTICAS");
             System.out.println("1 - Média de pacientes por dia");
             System.out.println("2 - Salários por médico");
             System.out.println("3 - Top especialidades");
             System.out.println("0 - Voltar");
+            InputsAuxiliares.imprimirLinha();
 
             opcao = InputsAuxiliares.lerInt("Opção: ");
 
@@ -81,11 +112,10 @@ public class Menu {
                 case 1 -> gestaoHospital.mediaPacientesDia();
                 case 2 -> gestaoHospital.tabelaSalarios();
                 case 3 -> gestaoHospital.topEspecialidades();
-                case 0 -> System.out.println("A voltar ao menu principal...");
-                default -> System.out.println("Opção inválida.");
+                case 0 -> { /* Voltar */ }
+                default -> InputsAuxiliares.imprimirErro("Opção inválida.");
             }
-
-            pausa();
+            if (opcao != 0) pausa();
 
         } while (opcao != 0);
     }
@@ -96,11 +126,13 @@ public class Menu {
         int opcao;
 
         do {
-            System.out.println("\n===== CONFIGURAÇÕES =====");
+            InputsAuxiliares.limparTela();
+            InputsAuxiliares.imprimirCabecalho("CONFIGURAÇÕES");
             System.out.println("1 - Alterar caminho ficheiros");
             System.out.println("2 - Alterar separador");
             System.out.println("3 - Alterar tempos de consulta");
             System.out.println("0 - Voltar");
+            InputsAuxiliares.imprimirLinha();
 
             opcao = InputsAuxiliares.lerInt("Opção: ");
 
@@ -108,11 +140,10 @@ public class Menu {
                 case 1 -> gestaoHospital.alterarCaminhoFicheiros();
                 case 2 -> gestaoHospital.alterarSeparador();
                 case 3 -> gestaoHospital.alterarTemposConsulta();
-                case 0 -> System.out.println("A voltar ao menu principal...");
-                default -> System.out.println("Opção inválida.");
+                case 0 -> { /* Voltar */ }
+                default -> InputsAuxiliares.imprimirErro("Opção inválida.");
             }
-
-            pausa();
+            if (opcao != 0) pausa();
 
         } while (opcao != 0);
     }

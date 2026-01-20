@@ -295,4 +295,6 @@ public class InputsAuxiliares {
     public static void pausa() {
         pausar();
     }
+
+
 }
