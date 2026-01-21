@@ -1,0 +1,721 @@
+package Servicos;
+
+import Entidades.*;
+import Ficheiros.*;
+import UI.InputsAuxiliares;
+import java.io.File;
+
+public class GestaoHospital {
+    // ================== ATRIBUTOS ==================
+    private Medico[] medicos;
+    private Paciente[] pacientes;
+    private Consulta[] consultas;
+    private Sintoma[] sintomas;
+    private Especialidade[] especialidades;
+
+    private Configuracao configuracao;
+    private LeitorFicheiros leitor;
+    private GestorFicheiros gestor;
+
+    private int totalMedicos;
+    private int totalPacientes;
+    private int totalConsultas;
+    private int totalSintomas;
+    private int totalEspecialidades;
+
+    private int totalPacientesAtendidos = 0;
+    private int diasDecorridos = 1;
+    private int unidadeTempoAtual = 1;
+    private final int UNIDADES_POR_DIA = 24;
+
+    // ================== CONSTRUTOR ==================
+    public GestaoHospital() {
+        medicos = new Medico[100];
+        pacientes = new Paciente[200];
+        consultas = new Consulta[100];
+        sintomas = new Sintoma[50];
+        especialidades = new Especialidade[20];
+
+        totalMedicos = 0;
+        totalPacientes = 0;
+        totalConsultas = 0;
+        totalSintomas = 0;
+        totalEspecialidades = 0;
+
+        configuracao = new Configuracao();
+
+        leitor = new LeitorFicheiros(String.valueOf(configuracao.getSeparador()));
+        gestor = new GestorFicheiros(String.valueOf(configuracao.getSeparador()));
+
+        carregarDadosIniciais();
+        gestor.escreverLog("logs.txt", "Sistema iniciado - Dia " + diasDecorridos);
+    }
+
+    // ================== CARREGAMENTO DE DADOS ==================
+    private void carregarDadosIniciais() {
+        try {
+            String caminho = configuracao.getCaminhoFicheiros();
+            File dir = new File(caminho);
+            if (!dir.exists()) dir.mkdirs();
+
+            // Carregar especialidades
+            Especialidade[] espLidas = leitor.lerEspecialidades(caminho + "especialidades.txt");
+            if (espLidas != null) {
+                for (Especialidade e : espLidas) {
+                    if (e != null && totalEspecialidades < especialidades.length)
+                        especialidades[totalEspecialidades++] = e;
+                }
+            }
+
+            // Carregar médicos
+            Medico[] medLidos = leitor.lerMedicos(caminho + "medicos.txt");
+            if (medLidos != null) {
+                for (Medico m : medLidos) {
+                    if (m != null && totalMedicos < medicos.length)
+                        medicos[totalMedicos++] = m;
+                }
+            }
+
+            // Carregar sintomas
+            Sintoma[] sintLidos = leitor.lerSintomas(caminho + "sintomas.txt", especialidades);
+            if (sintLidos != null) {
+                for (Sintoma s : sintLidos) {
+                    if (s != null && totalSintomas < sintomas.length)
+                        sintomas[totalSintomas++] = s;
+                }
+            }
+
+            InputsAuxiliares.imprimirSucesso("Dados carregados com sucesso!");
+
+        } catch (Exception e) {
+            InputsAuxiliares.imprimirErro("Erro ao carregar dados: " + e.getMessage());
+        }
+    }
+
+    // ================== CONFIGURAÇÕES ==================
+    public void alterarCaminhoFicheiros() {
+        InputsAuxiliares.imprimirCabecalho("ALTERAR CAMINHO DOS FICHEIROS");
+        String novoCaminho = InputsAuxiliares.lerTextoNaoVazio("Novo caminho: ");
+        if (!novoCaminho.endsWith("/") && !novoCaminho.endsWith("\\"))
+            novoCaminho += "/";
+
+        if (configuracao.verificarPassword(InputsAuxiliares.lerTexto("Password: "))) {
+            configuracao.setCaminhoFicheiros(novoCaminho);
+
+            // Recarregar dados do novo caminho
+            totalEspecialidades = 0;
+            totalMedicos = 0;
+            totalSintomas = 0;
+
+            leitor = new LeitorFicheiros(String.valueOf(configuracao.getSeparador()));
+            carregarDadosIniciais();
+
+            InputsAuxiliares.imprimirSucesso("Caminho alterado e dados recarregados!");
+        } else {
+            InputsAuxiliares.imprimirErro("Password incorreta!");
+        }
+    }
+
+    public void alterarSeparador() {
+        InputsAuxiliares.imprimirCabecalho("ALTERAR SEPARADOR");
+        char novoSeparador = InputsAuxiliares.lerSeparador("Novo separador");
+
+        if (configuracao.verificarPassword(InputsAuxiliares.lerTexto("Password: "))) {
+            configuracao.setSeparador(novoSeparador);
+            leitor = new LeitorFicheiros(String.valueOf(novoSeparador));
+            gestor = new GestorFicheiros(String.valueOf(novoSeparador));
+
+            InputsAuxiliares.imprimirSucesso("Separador alterado!");
+        } else {
+            InputsAuxiliares.imprimirErro("Password incorreta!");
+        }
+    }
+
+    public void alterarTemposConsulta() {
+        InputsAuxiliares.imprimirCabecalho("ALTERAR TEMPOS DE CONSULTA");
+
+        if (!configuracao.verificarPassword(InputsAuxiliares.lerTexto("Password: "))) {
+            InputsAuxiliares.imprimirErro("Password incorreta!");
+            return;
+        }
+
+        System.out.println("(Deixe em branco para manter o valor atual)");
+
+        String inputBaixa = InputsAuxiliares.lerTexto(
+                "Tempo Baixa [" + configuracao.getTempoConsultaBaixa() + "]: ");
+        if (!inputBaixa.isEmpty()) {
+            try {
+                int tempo = Integer.parseInt(inputBaixa);
+                if (tempo > 0) configuracao.setTempoConsultaBaixa(tempo);
+            } catch (NumberFormatException e) {
+                InputsAuxiliares.imprimirErro("Valor inválido!");
+            }
+        }
+
+        String inputMedia = InputsAuxiliares.lerTexto(
+                "Tempo Média [" + configuracao.getTempoConsultaMedia() + "]: ");
+        if (!inputMedia.isEmpty()) {
+            try {
+                int tempo = Integer.parseInt(inputMedia);
+                if (tempo > 0) configuracao.setTempoConsultaMedia(tempo);
+            } catch (NumberFormatException e) {
+                InputsAuxiliares.imprimirErro("Valor inválido!");
+            }
+        }
+
+        String inputUrgente = InputsAuxiliares.lerTexto(
+                "Tempo Urgente [" + configuracao.getTempoConsultaUrgente() + "]: ");
+        if (!inputUrgente.isEmpty()) {
+            try {
+                int tempo = Integer.parseInt(inputUrgente);
+                if (tempo > 0) configuracao.setTempoConsultaUrgente(tempo);
+            } catch (NumberFormatException e) {
+                InputsAuxiliares.imprimirErro("Valor inválido!");
+            }
+        }
+
+        InputsAuxiliares.imprimirSucesso("Tempos atualizados!");
+    }
+
+    // ================== ESTATÍSTICAS ==================
+    public void mediaPacientesDia() {
+        ConsultaEstatistica.mostrarMediaPacientes(totalPacientesAtendidos, diasDecorridos);
+    }
+
+    public void tabelaSalarios() {
+        ConsultaEstatistica.mostrarTabelaSalarios(medicos, totalMedicos, diasDecorridos);
+    }
+
+    public void topEspecialidades() {
+        ConsultaEstatistica.mostrarTopEspecialidades(especialidades, totalEspecialidades,
+                pacientes, totalPacientes);
+    }
+
+    // ================== GESTÃO DE MÉDICOS ==================
+    public void listarMedicos() {
+        InputsAuxiliares.imprimirCabecalho("LISTA DE MÉDICOS");
+        System.out.printf("%-20s %-15s %-15s %-10s %-10s%n",
+                "NOME", "ESPECIALIDADE", "HORÁRIO", "DISPONÍVEL", "HORAS TRAB.");
+
+        for (int i = 0; i < totalMedicos; i++) {
+            Medico m = medicos[i];
+            String horario = m.getHoraEntrada() + "h-" + m.getHoraSaida() + "h";
+            String disponivel = m.isDisponivel() ? "Sim" : "Não";
+
+            System.out.printf("%-20s %-15s %-15s %-10s %.1f horas%n",
+                    m.getNome(), m.getEspecialidade(), horario, disponivel,
+                    m.getHorasTrabalhadas());
+        }
+    }
+
+    public Medico procurarMedicoPorEspecialidade(String especialidade) {
+        for (int i = 0; i < totalMedicos; i++) {
+            Medico m = medicos[i];
+            if (m.getEspecialidade().equalsIgnoreCase(especialidade) &&
+                    m.isDisponivel() &&
+                    m.estaEmServico(unidadeTempoAtual)) {
+                return m;
+            }
+        }
+        return null;
+    }
+
+    public boolean adicionarMedico(Medico medico) {
+        if (totalMedicos >= medicos.length) return false;
+        medicos[totalMedicos++] = medico;
+        gestor.escreverLog("logs.txt", "Médico adicionado: " + medico.getNome());
+        return true;
+    }
+
+    public Medico procurarMedicoPorNome(String nome) {
+        for (int i = 0; i < totalMedicos; i++) {
+            if (medicos[i].getNome().equalsIgnoreCase(nome)) {
+                return medicos[i];
+            }
+        }
+        return null;
+    }
+
+    public boolean atualizarMedico(String nome, Medico atualizado) {
+        for (int i = 0; i < totalMedicos; i++) {
+            if (medicos[i].getNome().equalsIgnoreCase(nome)) {
+                medicos[i] = atualizado;
+                gestor.escreverLog("logs.txt", "Médico atualizado: " + nome);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean removerMedico(String nome) {
+        for (int i = 0; i < totalMedicos; i++) {
+            if (medicos[i].getNome().equalsIgnoreCase(nome)) {
+                // Shift left manual
+                for (int j = i; j < totalMedicos - 1; j++) {
+                    medicos[j] = medicos[j + 1];
+                }
+                medicos[--totalMedicos] = null;
+                gestor.escreverLog("logs.txt", "Médico removido: " + nome);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // ================== GESTÃO DE PACIENTES E TRIAGEM ==================
+    public boolean adicionarPaciente(Paciente p) {
+        if (totalPacientes >= pacientes.length) return false;
+        pacientes[totalPacientes++] = p;
+        return true;
+    }
+
+    public void listarPacientes() {
+        InputsAuxiliares.imprimirCabecalho("LISTA DE PACIENTES");
+        System.out.printf("%-20s %-10s %-20s %-15s %-10s%n",
+                "NOME", "URGÊNCIA", "ESPECIALIDADE", "ESTADO", "ESPERA (UT)");
+
+        for (int i = 0; i < totalPacientes; i++) {
+            Paciente p = pacientes[i];
+            System.out.printf("%-20s %-10s %-20s %-15s %d UT%n",
+                    p.getNome(),
+                    p.getNivelUrgencia(),
+                    (p.getEspecialidadeDesejada() != null ? p.getEspecialidadeDesejada() : "N/D"),
+                    (p.isEmAtendimento() ? "Em Atendimento" : "Sala de Espera"),
+                    p.getTempoEspera());
+        }
+    }
+
+    /**
+     * TRIAGEM COMPLETA - conforme enunciado
+     */
+    public void registarPaciente() {
+        InputsAuxiliares.imprimirCabecalho("TRIAGEM DE PACIENTE");
+
+        String nome = InputsAuxiliares.lerTextoNaoVazio("Nome do paciente: ");
+        Paciente p = new Paciente(nome, 5); // Limite de 5 sintomas conforme enunciado
+
+        // 1. SELECIONAR SINTOMAS
+        boolean adicionarMais = true;
+        while (adicionarMais && p.getTotalSintomas() < 5) {
+            System.out.println("\n--- LISTA DE SINTOMAS DISPONÍVEIS ---");
+            for (int i = 0; i < totalSintomas; i++) {
+                System.out.printf("%d. %s%n", (i + 1), sintomas[i]);
+            }
+            System.out.println("0. Terminar seleção");
+
+            int escolha = InputsAuxiliares.lerInteiroIntervalo(
+                    "Escolha o sintoma (número): ", 0, totalSintomas);
+
+            if (escolha == 0) {
+                adicionarMais = false;
+            } else {
+                Sintoma selecionado = sintomas[escolha - 1];
+
+                // Verificar se já tem o sintoma
+                boolean jaTem = p.temSintoma(selecionado.getNome());
+
+                if (!jaTem) {
+                    p.adicionarSintoma(selecionado);
+                    System.out.println("✓ Sintoma adicionado: " + selecionado.getNome());
+                } else {
+                    System.out.println("⚠ Paciente já tem esse sintoma.");
+                }
+
+                if (p.getTotalSintomas() >= 5) {
+                    System.out.println("⏹ Limite de 5 sintomas atingido.");
+                    adicionarMais = false;
+                }
+            }
+        }
+
+        if (p.getTotalSintomas() == 0) {
+            InputsAuxiliares.imprimirErro("Paciente tem de ter pelo menos um sintoma.");
+            return;
+        }
+
+        // 2. CALCULAR URGÊNCIA E ESPECIALIDADE (conforme enunciado)
+        calcularUrgenciaEEspecialidade(p);
+
+        // 3. REGISTAR PACIENTE
+        if (adicionarPaciente(p)) {
+            InputsAuxiliares.imprimirSucesso("PACIENTE REGISTADO COM SUCESSO!");
+            System.out.println("📋 Resumo da Triagem:");
+            System.out.println("  Nome: " + p.getNome());
+            System.out.println("  Nível de Urgência: " + p.getNivelUrgencia());
+            System.out.println("  Especialidade Encaminhada: " +
+                    (p.getEspecialidadeDesejada() != null ? p.getEspecialidadeDesejada() : "Não definida"));
+            System.out.println("  Sintomas: " + p.getTotalSintomas());
+
+            gestor.escreverLog("logs.txt", "Paciente registado: " + p.getNome() +
+                    " - Urgência: " + p.getNivelUrgencia());
+        } else {
+            InputsAuxiliares.imprimirErro("ERRO: Capacidade máxima de pacientes atingida!");
+        }
+    }
+
+    /**
+     * Calcula urgência e especialidade conforme enunciado:
+     * - Urgência baseada no sintoma mais urgente
+     * - Especialidade baseada no sintoma mais urgente que tenha especialidade
+     */
+    private void calcularUrgenciaEEspecialidade(Paciente p) {
+        String maiorUrgencia = "Verde";
+        Sintoma sintomaMaisUrgente = null;
+
+        // Encontrar o sintoma mais urgente
+        for (int i = 0; i < p.getTotalSintomas(); i++) {
+            Sintoma s = p.getSintomas()[i];
+            String urg = s.getNivelUrgencia();
+
+            // Hierarquia: Vermelho > Laranja > Verde
+            if (urg.equalsIgnoreCase("Vermelho")) {
+                maiorUrgencia = "Vermelho";
+                sintomaMaisUrgente = s;
+                break; // Máxima prioridade encontrada
+            } else if (urg.equalsIgnoreCase("Laranja") && !maiorUrgencia.equals("Vermelho")) {
+                maiorUrgencia = "Laranja";
+                sintomaMaisUrgente = s;
+            } else if (urg.equalsIgnoreCase("Verde") &&
+                    !maiorUrgencia.equals("Vermelho") &&
+                    !maiorUrgencia.equals("Laranja")) {
+                maiorUrgencia = "Verde";
+                if (sintomaMaisUrgente == null) sintomaMaisUrgente = s;
+            }
+        }
+
+        // Converter para níveis do sistema
+        String nivelSistema;
+        switch (maiorUrgencia) {
+            case "Vermelho": nivelSistema = "Urgente"; break;
+            case "Laranja": nivelSistema = "Média"; break;
+            default: nivelSistema = "Baixa"; break;
+        }
+        p.setNivelUrgencia(nivelSistema);
+
+        // Determinar especialidade
+        String especialidadeFinal = "Clínica Geral"; // Valor padrão
+
+        if (sintomaMaisUrgente != null && sintomaMaisUrgente.getEspecialidade() != null) {
+            especialidadeFinal = sintomaMaisUrgente.getEspecialidade().getNome();
+        } else {
+            // Tentar encontrar qualquer sintoma com especialidade
+            for (int i = 0; i < p.getTotalSintomas(); i++) {
+                Sintoma s = p.getSintomas()[i];
+                if (s.getEspecialidade() != null) {
+                    especialidadeFinal = s.getEspecialidade().getNome();
+                    break;
+                }
+            }
+        }
+
+        p.setEspecialidadeDesejada(especialidadeFinal);
+    }
+
+    // ================== GESTÃO DE CONSULTAS E TEMPO ==================
+    public boolean criarConsulta(Medico medico, Paciente paciente, int tempoConsulta) {
+        if (totalConsultas >= consultas.length) return false;
+
+        consultas[totalConsultas++] = new Consulta(medico, paciente, tempoConsulta);
+        medico.setDisponivel(false);
+        paciente.setEmAtendimento(true);
+
+        // Registrar horas trabalhadas
+        medico.adicionarHorasTrabalhadas(1);
+
+        gestor.escreverLog("logs.txt",
+                "Consulta iniciada: " + paciente.getNome() + " -> Dr. " + medico.getNome() +
+                        " (" + tempoConsulta + " UT)");
+
+        return true;
+    }
+
+    /**
+     * AVANÇAR TEMPO - conforme enunciado (24 UT por dia)
+     */
+    public void avancarTempo() {
+        InputsAuxiliares.imprimirCabecalho("AVANÇAR TEMPO");
+
+        unidadeTempoAtual++;
+        if (unidadeTempoAtual > UNIDADES_POR_DIA) {
+            unidadeTempoAtual = 1;
+            diasDecorridos++;
+            System.out.println("\n🎉🎉🎉 NOVO DIA: " + diasDecorridos + " 🎉🎉🎉");
+            gestor.escreverLog("logs.txt", "Novo dia: " + diasDecorridos);
+        }
+
+        System.out.println(" Hora atual: " + unidadeTempoAtual + " UT");
+        System.out.println(" Dia: " + diasDecorridos);
+
+        // 1. PROCESSAR CONSULTAS EM CURSO
+        for (int i = 0; i < totalConsultas; i++) {
+            if (consultas[i] != null) {
+                consultas[i].avancarTempo();
+
+                // Verificar descanso do médico (conforme enunciado)
+                Medico m = consultas[i].getMedico();
+                if (m.precisaDescanso(configuracao.getHorasTrabalhoParaDescanso())) {
+                    System.out.println("⚠ MÉDICO PRECISA DESCANSO: " + m.getNome() +
+                            " (" + m.getHorasTrabalhoContinuo() + " UT contínuas)");
+                    // Aqui poderia forçar pausa se implementado
+                }
+
+                if (consultas[i].terminou()) {
+                    terminarConsulta(i);
+                    i--; // Ajustar índice após remoção
+                }
+            }
+        }
+
+        // 2. ATUALIZAR TEMPO DE ESPERA DOS PACIENTES
+        for (int i = 0; i < totalPacientes; i++) {
+            if (pacientes[i] != null && !pacientes[i].isEmAtendimento()) {
+                pacientes[i].incrementarTempoEspera();
+                verificarAgravamento(pacientes[i]);
+            }
+        }
+
+        // 3. VERIFICAR DISPONIBILIDADE DE MÉDICOS (horário de serviço)
+        for (int i = 0; i < totalMedicos; i++) {
+            Medico m = medicos[i];
+            if (!m.estaEmServico(unidadeTempoAtual) && !m.isDisponivel()) {
+                // Médico saiu do horário mas está em consulta
+                System.out.println("⚠ Médico " + m.getNome() +
+                        " está além do horário (em consulta)");
+            }
+        }
+
+        // 4. ALOCAR PACIENTES AUTOMATICAMENTE
+        alocarPacientesAutomaticamente();
+
+        gestor.escreverLog("logs.txt", "Tempo avançado para UT: " + unidadeTempoAtual);
+    }
+
+    private void terminarConsulta(int index) {
+        Consulta c = consultas[index];
+        Medico m = c.getMedico();
+        Paciente p = c.getPaciente();
+
+        m.setDisponivel(true);
+        p.setEmAtendimento(false);
+
+        // Remover consulta (shift left manual)
+        for (int i = index; i < totalConsultas - 1; i++) {
+            consultas[i] = consultas[i + 1];
+        }
+        consultas[--totalConsultas] = null;
+
+        totalPacientesAtendidos++;
+
+        System.out.println(" CONSULTA TERMINADA: " + p.getNome() +
+                " atendido por Dr. " + m.getNome());
+
+        gestor.escreverLog("logs.txt",
+                "Consulta terminada: " + p.getNome() + " -> Dr. " + m.getNome());
+    }
+
+    /**
+     * AGRAVAMENTO conforme enunciado
+     */
+    private void verificarAgravamento(Paciente p) {
+        int espera = p.getTempoEspera();
+        String urg = p.getNivelUrgencia();
+
+        if (urg.equals("Baixa") && espera >= configuracao.getTempoBaixaParaMedia()) {
+            p.setNivelUrgencia("Média");
+            System.out.println(" AGRAVAMENTO: " + p.getNome() + " agravou para MÉDIA");
+            gestor.escreverLog("logs.txt",
+                    "Agravamento: " + p.getNome() + " -> Média");
+        } else if (urg.equals("Média") && espera >= configuracao.getTempoMediaParaUrgente()) {
+            p.setNivelUrgencia("Urgente");
+            System.out.println(" AGRAVAMENTO: " + p.getNome() + " agravou para URGENTE");
+            gestor.escreverLog("logs.txt",
+                    "Agravamento: " + p.getNome() + " -> Urgente");
+        } else if (urg.equals("Urgente") && espera >= configuracao.getTempoUrgenteParaSaida()) {
+            System.out.println(" URGENTE CRÍTICO: " + p.getNome() +
+                    " precisa atenção imediata!");
+            gestor.escreverLog("logs.txt",
+                    "Urgente crítico: " + p.getNome());
+        }
+    }
+
+    private void alocarPacientesAutomaticamente() {
+        // Ordenar por urgência: Urgente > Média > Baixa
+        for (int i = 0; i < totalPacientes; i++) {
+            Paciente p = pacientes[i];
+            if (p == null || p.isEmAtendimento() || p.getEspecialidadeDesejada() == null)
+                continue;
+
+            Medico m = procurarMedicoPorEspecialidade(p.getEspecialidadeDesejada());
+            if (m != null && m.isDisponivel() && m.estaEmServico(unidadeTempoAtual)) {
+                int tempo = switch (p.getNivelUrgencia()) {
+                    case "Baixa" -> configuracao.getTempoConsultaBaixa();
+                    case "Média" -> configuracao.getTempoConsultaMedia();
+                    case "Urgente" -> configuracao.getTempoConsultaUrgente();
+                    default -> 1;
+                };
+
+                if (criarConsulta(m, p, tempo)) {
+                    System.out.println(" ALOCADO: " + p.getNome() +
+                            " -> Dr. " + m.getNome() + " (" + p.getNivelUrgencia() + ")");
+                }
+            }
+        }
+    }
+
+    // ================== GESTÃO DE ESPECIALIDADES ==================
+    public void listarEspecialidades() {
+        InputsAuxiliares.imprimirCabecalho("LISTA DE ESPECIALIDADES");
+        for (int i = 0; i < totalEspecialidades; i++) {
+            System.out.println((i + 1) + ". " + especialidades[i]);
+        }
+    }
+
+    public Especialidade procurarEspecialidade(String codigo) {
+        for (int i = 0; i < totalEspecialidades; i++) {
+            if (especialidades[i].getCodigo().equalsIgnoreCase(codigo)) {
+                return especialidades[i];
+            }
+        }
+        return null;
+    }
+
+    public boolean adicionarEspecialidade(Especialidade e) {
+        if (totalEspecialidades >= especialidades.length) return false;
+
+        // Verificar duplicados
+        for (int i = 0; i < totalEspecialidades; i++) {
+            if (especialidades[i].getCodigo().equalsIgnoreCase(e.getCodigo())) {
+                return false;
+            }
+        }
+
+        especialidades[totalEspecialidades++] = e;
+        gestor.escreverLog("logs.txt", "Especialidade adicionada: " + e.getNome());
+        return true;
+    }
+
+    public boolean atualizarEspecialidade(String codigo, Especialidade atualizada) {
+        for (int i = 0; i < totalEspecialidades; i++) {
+            if (especialidades[i].getCodigo().equalsIgnoreCase(codigo)) {
+                especialidades[i] = atualizada;
+                gestor.escreverLog("logs.txt", "Especialidade atualizada: " + codigo);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean removerEspecialidade(String codigo) {
+        for (int i = 0; i < totalEspecialidades; i++) {
+            if (especialidades[i].getCodigo().equalsIgnoreCase(codigo)) {
+                for (int j = i; j < totalEspecialidades - 1; j++) {
+                    especialidades[j] = especialidades[j + 1];
+                }
+                especialidades[--totalEspecialidades] = null;
+                gestor.escreverLog("logs.txt", "Especialidade removida: " + codigo);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // ================== GESTÃO DE SINTOMAS ==================
+    public void listarSintomas() {
+        InputsAuxiliares.imprimirCabecalho("LISTA DE SINTOMAS");
+        for (int i = 0; i < totalSintomas; i++) {
+            System.out.println((i + 1) + ". " + sintomas[i]);
+        }
+    }
+
+    public Sintoma procurarSintoma(String nome) {
+        for (int i = 0; i < totalSintomas; i++) {
+            if (sintomas[i].getNome().equalsIgnoreCase(nome)) {
+                return sintomas[i];
+            }
+        }
+        return null;
+    }
+
+    public boolean adicionarSintoma(Sintoma s) {
+        if (totalSintomas >= sintomas.length) return false;
+
+        // Verificar duplicados
+        for (int i = 0; i < totalSintomas; i++) {
+            if (sintomas[i].getNome().equalsIgnoreCase(s.getNome())) {
+                return false;
+            }
+        }
+
+        sintomas[totalSintomas++] = s;
+        gestor.escreverLog("logs.txt", "Sintoma adicionado: " + s.getNome());
+        return true;
+    }
+
+    public boolean atualizarSintoma(String nome, Sintoma atualizado) {
+        for (int i = 0; i < totalSintomas; i++) {
+            if (sintomas[i].getNome().equalsIgnoreCase(nome)) {
+                sintomas[i] = atualizado;
+                gestor.escreverLog("logs.txt", "Sintoma atualizado: " + nome);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean removerSintoma(String nome) {
+        for (int i = 0; i < totalSintomas; i++) {
+            if (sintomas[i].getNome().equalsIgnoreCase(nome)) {
+                for (int j = i; j < totalSintomas - 1; j++) {
+                    sintomas[j] = sintomas[j + 1];
+                }
+                sintomas[--totalSintomas] = null;
+                gestor.escreverLog("logs.txt", "Sintoma removido: " + nome);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // ================== PERSISTÊNCIA ==================
+    public void guardarDados() {
+        try {
+            String caminho = configuracao.getCaminhoFicheiros();
+
+            // Guardar Médicos
+            java.io.BufferedWriter bw = new java.io.BufferedWriter(
+                    new java.io.FileWriter(caminho + "medicos.txt"));
+            for (int i = 0; i < totalMedicos; i++) {
+                Medico m = medicos[i];
+                String linha = String.format("%s;%s;%d;%d;%.2f",
+                        m.getNome(), m.getEspecialidade(),
+                        m.getHoraEntrada(), m.getHoraSaida(), m.getValorHora());
+                bw.write(linha.replace(",", "."));
+                bw.newLine();
+            }
+            bw.close();
+
+            // Guardar Pacientes (histórico)
+            bw = new java.io.BufferedWriter(
+                    new java.io.FileWriter(caminho + "pacientes_historico.txt", true)); // Append
+            for (int i = 0; i < totalPacientes; i++) {
+                Paciente p = pacientes[i];
+                bw.write(p.getNome() + ";" + p.getNivelUrgencia() + ";" +
+                        p.getEspecialidadeDesejada() + ";" + p.getTempoEspera());
+                bw.newLine();
+            }
+            bw.close();
+
+            // Guardar configuração atual
+            bw = new java.io.BufferedWriter(
+                    new java.io.FileWriter(caminho + "configuracao.txt"));
+            bw.write(configuracao.toString());
+            bw.close();
+
+            gestor.escreverLog("logs.txt",
+                    "Dados guardados com sucesso ao encerrar (Dia " + diasDecorridos + ")");
+
+        } catch (java.io.IOException e) {
+            InputsAuxiliares.imprimirErro("Erro ao guardar dados: " + e.getMessage());
+        }
+    }
+}
