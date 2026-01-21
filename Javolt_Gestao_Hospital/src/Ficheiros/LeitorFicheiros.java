@@ -39,7 +39,7 @@ public class LeitorFicheiros {
                 }
             }
         } catch (IOException e) {
-            System.out.println("⚠ Erro ao ler especialidades: " + e.getMessage());
+            System.out.println(" Erro ao ler especialidades: " + e.getMessage());
         }
         return lista;
     }
@@ -65,7 +65,7 @@ public class LeitorFicheiros {
                 }
             }
         } catch (IOException e) {
-            System.out.println("⚠ Erro ao ler médicos: " + e.getMessage());
+            System.out.println(" Erro ao ler médicos: " + e.getMessage());
         }
         return lista;
     }
@@ -99,7 +99,7 @@ public class LeitorFicheiros {
                 }
             }
         } catch (IOException e) {
-            System.out.println("⚠ Erro ao ler sintomas: " + e.getMessage());
+            System.out.println(" Erro ao ler sintomas: " + e.getMessage());
         }
         return lista;
     }

@@ -18,7 +18,7 @@ public class ConsultaEstatistica {
     public static void mostrarMediaPacientes(int totalUtentes, int totalDias) {
         double media = mediaUtentesPorDia(totalUtentes, totalDias);
         System.out.println("\n" + "=".repeat(40));
-        System.out.println("📊 MÉDIA DE PACIENTES POR DIA");
+        System.out.println(" MÉDIA DE PACIENTES POR DIA");
         System.out.println("=".repeat(40));
         System.out.println("Total pacientes atendidos: " + totalUtentes);
         System.out.println("Total dias decorridos: " + totalDias);
@@ -37,7 +37,7 @@ public class ConsultaEstatistica {
 
     public static void mostrarTabelaSalarios(Medico[] medicos, int totalMedicos, int dias) {
         System.out.println("\n" + "=".repeat(50));
-        System.out.println("💰 TABELA DE SALÁRIOS POR MÉDICO");
+        System.out.println(" TABELA DE SALÁRIOS POR MÉDICO");
         System.out.println("=".repeat(50));
         System.out.printf("%-20s %-15s %-10s %-10s %-10s%n",
                 "MÉDICO", "ESPECIALIDADE", "HORAS", "VALOR/H", "SALÁRIO");
@@ -88,7 +88,7 @@ public class ConsultaEstatistica {
     public static void mostrarUtentesPorSintoma(Paciente[] pacientes, int totalPacientes,
                                                 Sintoma[] sintomas, int totalSintomas) {
         System.out.println("\n" + "=".repeat(50));
-        System.out.println("📈 UTENTES POR SINTOMA");
+        System.out.println(" UTENTES POR SINTOMA");
         System.out.println("=".repeat(50));
         System.out.printf("%-25s %-15s %-10s%n",
                 "SINTOMA", "NÍVEL", "PACIENTES");
@@ -118,7 +118,7 @@ public class ConsultaEstatistica {
                                                 Paciente[] pacientes,
                                                 int totalPacientes) {
         if (totalEspecialidades == 0) {
-            System.out.println("\n⚠ Nenhuma especialidade registada.");
+            System.out.println("\n Nenhuma especialidade registada.");
             return;
         }
 
@@ -169,7 +169,7 @@ public class ConsultaEstatistica {
         }
 
         System.out.println("\n" + "=".repeat(50));
-        System.out.println("🏆 TOP 3 ESPECIALIDADES");
+        System.out.println(" TOP 3 ESPECIALIDADES");
         System.out.println("=".repeat(50));
 
         int limite = Math.min(3, totalEspecialidades);

@@ -130,7 +130,7 @@ public class SubMedicos {
     }
 
     private void removerMedico(GestaoHospital gestaoHospital) {
-        System.out.println("\n🗑️  REMOVER MÉDICO");
+        System.out.println("\n  REMOVER MÉDICO");
         System.out.println("-".repeat(30));
 
         String nome = InputsAuxiliares.lerTextoNaoVazio("Nome do médico a remover: ");

@@ -92,7 +92,7 @@ public class Menu {
                 }
                 case 5 -> {
                     // Aqui poderia ter listarConsultas() se implementado
-                    System.out.println("\n⚠ Funcionalidade em desenvolvimento...");
+                    System.out.println("\n Funcionalidade em desenvolvimento...");
                     pausa();
                 }
                 case 0 -> { /* Voltar */ }
@@ -125,7 +125,7 @@ public class Menu {
                 case 3 -> gestaoHospital.topEspecialidades();
                 case 4 -> {
                     // Aqui poderia chamar método específico se implementado
-                    System.out.println("\n⚠ Funcionalidade em desenvolvimento...");
+                    System.out.println("\n Funcionalidade em desenvolvimento...");
                 }
                 case 0 -> { /* Voltar */ }
                 default -> InputsAuxiliares.imprimirErro("Opção inválida.");
@@ -156,7 +156,7 @@ public class Menu {
                 case 4 -> {
                     System.out.println("\n CONFIGURAÇÃO ATUAL:");
                     // Aqui poderia mostrar configuração se houver método
-                    System.out.println("⚠ Método toString() da Configuracao em desenvolvimento...");
+                    System.out.println(" Método toString() da Configuracao em desenvolvimento...");
                 }
                 case 0 -> { /* Voltar */ }
                 default -> InputsAuxiliares.imprimirErro("Opção inválida.");

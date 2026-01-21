@@ -443,8 +443,8 @@ public class GestaoHospital {
             gestor.escreverLog("logs.txt", "Novo dia: " + diasDecorridos);
         }
 
-        System.out.println("⏰ Hora atual: " + unidadeTempoAtual + " UT");
-        System.out.println("📅 Dia: " + diasDecorridos);
+        System.out.println(" Hora atual: " + unidadeTempoAtual + " UT");
+        System.out.println(" Dia: " + diasDecorridos);
 
         // 1. PROCESSAR CONSULTAS EM CURSO
         for (int i = 0; i < totalConsultas; i++) {
@@ -506,7 +506,7 @@ public class GestaoHospital {
 
         totalPacientesAtendidos++;
 
-        System.out.println("✅ CONSULTA TERMINADA: " + p.getNome() +
+        System.out.println(" CONSULTA TERMINADA: " + p.getNome() +
                 " atendido por Dr. " + m.getNome());
 
         gestor.escreverLog("logs.txt",
@@ -522,16 +522,16 @@ public class GestaoHospital {
 
         if (urg.equals("Baixa") && espera >= configuracao.getTempoBaixaParaMedia()) {
             p.setNivelUrgencia("Média");
-            System.out.println("⚠ AGRAVAMENTO: " + p.getNome() + " agravou para MÉDIA");
+            System.out.println(" AGRAVAMENTO: " + p.getNome() + " agravou para MÉDIA");
             gestor.escreverLog("logs.txt",
                     "Agravamento: " + p.getNome() + " -> Média");
         } else if (urg.equals("Média") && espera >= configuracao.getTempoMediaParaUrgente()) {
             p.setNivelUrgencia("Urgente");
-            System.out.println("⚠ AGRAVAMENTO: " + p.getNome() + " agravou para URGENTE");
+            System.out.println(" AGRAVAMENTO: " + p.getNome() + " agravou para URGENTE");
             gestor.escreverLog("logs.txt",
                     "Agravamento: " + p.getNome() + " -> Urgente");
         } else if (urg.equals("Urgente") && espera >= configuracao.getTempoUrgenteParaSaida()) {
-            System.out.println("🚨 URGENTE CRÍTICO: " + p.getNome() +
+            System.out.println(" URGENTE CRÍTICO: " + p.getNome() +
                     " precisa atenção imediata!");
             gestor.escreverLog("logs.txt",
                     "Urgente crítico: " + p.getNome());
@@ -555,7 +555,7 @@ public class GestaoHospital {
                 };
 
                 if (criarConsulta(m, p, tempo)) {
-                    System.out.println("✅ ALOCADO: " + p.getNome() +
+                    System.out.println(" ALOCADO: " + p.getNome() +
                             " -> Dr. " + m.getNome() + " (" + p.getNivelUrgencia() + ")");
                 }
             }
