@@ -9,7 +9,7 @@ public class SubMedicos {
         int opcao;
         do {
             System.out.println("\n" + "=".repeat(40));
-            System.out.println("   👨‍⚕️  GESTÃO DE MÉDICOS");
+            System.out.println("     GESTÃO DE MÉDICOS");
             System.out.println("=".repeat(40));
             System.out.println("1 - Adicionar médico");
             System.out.println("2 - Listar médicos");
@@ -35,7 +35,7 @@ public class SubMedicos {
     }
 
     private void adicionarMedico(GestaoHospital gestaoHospital) {
-        System.out.println("\n➕ ADICIONAR NOVO MÉDICO");
+        System.out.println("\n ADICIONAR NOVO MÉDICO");
         System.out.println("-".repeat(30));
 
         String nome = InputsAuxiliares.lerTextoNaoVazio("Nome do médico: ");
@@ -76,7 +76,7 @@ public class SubMedicos {
     }
 
     private void atualizarMedico(GestaoHospital gestaoHospital) {
-        System.out.println("\n✏️  ATUALIZAR MÉDICO");
+        System.out.println("\n  ATUALIZAR MÉDICO");
         System.out.println("-".repeat(30));
 
         String nome = InputsAuxiliares.lerTextoNaoVazio("Nome do médico a atualizar: ");

@@ -8,7 +8,7 @@ public class SubEspecialidade {
         int opcao;
         do {
             System.out.println("\n" + "=".repeat(40));
-            System.out.println("   🩺 GESTÃO DE ESPECIALIDADES");
+            System.out.println("   GESTÃO DE ESPECIALIDADES");
             System.out.println("=".repeat(40));
             System.out.println("1 - Adicionar especialidade");
             System.out.println("2 - Listar especialidades");
@@ -34,7 +34,7 @@ public class SubEspecialidade {
     }
 
     private void adicionarEspecialidade(GestaoHospital gestaoHospital) {
-        System.out.println("\n➕ ADICIONAR NOVA ESPECIALIDADE");
+        System.out.println("\n ADICIONAR NOVA ESPECIALIDADE");
         System.out.println("-".repeat(30));
 
         String codigo = InputsAuxiliares.lerTextoNaoVazio("Código da especialidade: ");
@@ -50,7 +50,7 @@ public class SubEspecialidade {
     }
 
     private void atualizarEspecialidade(GestaoHospital gestaoHospital) {
-        System.out.println("\n✏️  ATUALIZAR ESPECIALIDADE");
+        System.out.println("\n  ATUALIZAR ESPECIALIDADE");
         System.out.println("-".repeat(30));
 
         String codigo = InputsAuxiliares.lerTextoNaoVazio("Código da especialidade a atualizar: ");
@@ -80,7 +80,7 @@ public class SubEspecialidade {
     }
 
     private void removerEspecialidade(GestaoHospital gestaoHospital) {
-        System.out.println("\n🗑️  REMOVER ESPECIALIDADE");
+        System.out.println("\n  REMOVER ESPECIALIDADE");
         System.out.println("-".repeat(30));
 
         String codigo = InputsAuxiliares.lerTextoNaoVazio("Código da especialidade a remover: ");

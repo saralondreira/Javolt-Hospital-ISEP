@@ -9,7 +9,7 @@ public class SubSintoma {
         int opcao;
         do {
             System.out.println("\n" + "=".repeat(40));
-            System.out.println("   🤒 GESTÃO DE SINTOMAS");
+            System.out.println("   GESTÃO DE SINTOMAS");
             System.out.println("=".repeat(40));
             System.out.println("1 - Adicionar sintoma");
             System.out.println("2 - Listar sintomas");
@@ -35,7 +35,7 @@ public class SubSintoma {
     }
 
     private void adicionarSintoma(GestaoHospital gestaoHospital) {
-        System.out.println("\n➕ ADICIONAR NOVO SINTOMA");
+        System.out.println("\n ADICIONAR NOVO SINTOMA");
         System.out.println("-".repeat(30));
 
         String nome = InputsAuxiliares.lerTextoNaoVazio("Nome do sintoma: ");
@@ -75,7 +75,7 @@ public class SubSintoma {
     }
 
     private void atualizarSintoma(GestaoHospital gestaoHospital) {
-        System.out.println("\n✏️  ATUALIZAR SINTOMA");
+        System.out.println("\n  ATUALIZAR SINTOMA");
         System.out.println("-".repeat(30));
 
         String nome = InputsAuxiliares.lerTextoNaoVazio("Nome do sintoma a atualizar: ");
@@ -142,7 +142,7 @@ public class SubSintoma {
     }
 
     private void removerSintoma(GestaoHospital gestaoHospital) {
-        System.out.println("\n🗑️  REMOVER SINTOMA");
+        System.out.println("\n  REMOVER SINTOMA");
         System.out.println("-".repeat(30));
 
         String nome = InputsAuxiliares.lerTextoNaoVazio("Nome do sintoma a remover: ");

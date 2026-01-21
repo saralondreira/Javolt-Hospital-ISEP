@@ -35,9 +35,9 @@ public class Menu {
                 case 3 -> menuConfiguracoes();
                 case 4 -> menuGestaoDados(); // NOVO: Menu de gestão CRUD
                 case 0 -> {
-                    System.out.println("\n💾 A guardar dados...");
+                    System.out.println("\n A guardar dados...");
                     gestaoHospital.guardarDados();
-                    System.out.println("👋 Obrigado por utilizar o sistema Javolt Hospital.");
+                    System.out.println("  Obrigado por utilizar o sistema Javolt Hospital.");
                     System.out.println("   A encerrar...");
                 }
                 default -> InputsAuxiliares.imprimirErro("Opção inválida.");
@@ -154,7 +154,7 @@ public class Menu {
                 case 2 -> gestaoHospital.alterarSeparador();
                 case 3 -> gestaoHospital.alterarTemposConsulta();
                 case 4 -> {
-                    System.out.println("\n📋 CONFIGURAÇÃO ATUAL:");
+                    System.out.println("\n CONFIGURAÇÃO ATUAL:");
                     // Aqui poderia mostrar configuração se houver método
                     System.out.println("⚠ Método toString() da Configuracao em desenvolvimento...");
                 }
