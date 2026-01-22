@@ -15,7 +15,7 @@ public class Configuracao {
 
     // CONSTANTES DO ENUNCIADO
     public static final char SEPARADOR_DEFAULT = ';';
-    public static final String CAMINHO_DEFAULT = "dados/";
+    public static final String CAMINHO_DEFAULT = "Recursos\\/";
     public static final String PASSWORD_DEFAULT = "javolt";
     public static final int TEMPO_CONSULTA_BAIXA_DEFAULT = 1;
     public static final int TEMPO_CONSULTA_MEDIA_DEFAULT = 2;
