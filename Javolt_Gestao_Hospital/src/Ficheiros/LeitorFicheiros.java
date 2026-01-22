@@ -44,7 +44,7 @@ public class LeitorFicheiros {
         return lista;
     }
 
-    public Medico[] lerMedicos(String caminho) {
+    public Medico[] lerMedicos(String caminho, Especialidade[] especialidades, int totalEspecialidades) {
         int total = contarLinhas(caminho);
         Medico[] lista = new Medico[total];
 

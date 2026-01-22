@@ -3,6 +3,7 @@ package Servicos;
 import Entidades.*;
 import Ficheiros.*;
 import UI.InputsAuxiliares;
+
 import java.io.File;
 
 public class GestaoHospital {
@@ -32,9 +33,9 @@ public class GestaoHospital {
     public GestaoHospital() {
         medicos = new Medico[100];
         pacientes = new Paciente[200];
-        consultas = new Consulta[100];
-        sintomas = new Sintoma[50];
-        especialidades = new Especialidade[20];
+        consultas = new Consulta[300];
+        sintomas = new Sintoma[300];
+        especialidades = new Especialidade[50];
 
         totalMedicos = 0;
         totalPacientes = 0;
@@ -68,7 +69,11 @@ public class GestaoHospital {
             }
 
             // Carregar médicos
-            Medico[] medLidos = leitor.lerMedicos(caminho + "medicos.txt");
+            Medico[] medLidos = leitor.lerMedicos(
+                    caminho + "medicos.txt",
+                    especialidades,
+                    totalEspecialidades
+            );
             if (medLidos != null) {
                 for (Medico m : medLidos) {
                     if (m != null && totalMedicos < medicos.length)
@@ -85,7 +90,7 @@ public class GestaoHospital {
                 }
             }
 
-            InputsAuxiliares.imprimirSucesso("Dados carregados com sucesso!");
+            InputsAuxiliares.imprimirSucesso("Dados carregados: " + totalEspecialidades + " especialidades, " + totalMedicos + " médicos, " + totalSintomas + " sintomas.");
 
         } catch (Exception e) {
             InputsAuxiliares.imprimirErro("Erro ao carregar dados: " + e.getMessage());
@@ -339,7 +344,7 @@ public class GestaoHospital {
         // 3. REGISTAR PACIENTE
         if (adicionarPaciente(p)) {
             InputsAuxiliares.imprimirSucesso("PACIENTE REGISTADO COM SUCESSO!");
-            System.out.println("📋 Resumo da Triagem:");
+            System.out.println(" Resumo da Triagem:");
             System.out.println("  Nome: " + p.getNome());
             System.out.println("  Nível de Urgência: " + p.getNivelUrgencia());
             System.out.println("  Especialidade Encaminhada: " +
@@ -397,7 +402,9 @@ public class GestaoHospital {
 
         if (sintomaMaisUrgente != null && sintomaMaisUrgente.getEspecialidade() != null) {
             especialidadeFinal = sintomaMaisUrgente.getEspecialidade().getNome();
-        } else {
+        }
+
+        else {
             // Tentar encontrar qualquer sintoma com especialidade
             for (int i = 0; i < p.getTotalSintomas(); i++) {
                 Sintoma s = p.getSintomas()[i];
