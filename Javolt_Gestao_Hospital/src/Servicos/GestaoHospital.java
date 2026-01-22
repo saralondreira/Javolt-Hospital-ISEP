@@ -1,15 +1,16 @@
 package Servicos;
 
 import Entidades.*;
-import Ficheiros.*;
+import Ficheiros.GestorFicheiros;
+import Ficheiros.LeitorFicheiros;
 import UI.InputsAuxiliares;
-
 import java.io.File;
 
 public class GestaoHospital {
     // ================== ATRIBUTOS ==================
     private Medico[] medicos;
     private Paciente[] pacientes;
+    private GestaoTurnos gestorDeTurnos;
     private Consulta[] consultas;
     private Sintoma[] sintomas;
     private Especialidade[] especialidades;
@@ -25,17 +26,14 @@ public class GestaoHospital {
     private int totalEspecialidades;
 
     private int totalPacientesAtendidos = 0;
-    private int diasDecorridos = 1;
-    private int unidadeTempoAtual = 1;
-    private final int UNIDADES_POR_DIA = 24;
 
     // ================== CONSTRUTOR ==================
     public GestaoHospital() {
         medicos = new Medico[100];
         pacientes = new Paciente[200];
-        consultas = new Consulta[300];
-        sintomas = new Sintoma[300];
-        especialidades = new Especialidade[50];
+        consultas = new Consulta[100];
+        sintomas = new Sintoma[50];
+        especialidades = new Especialidade[20];
 
         totalMedicos = 0;
         totalPacientes = 0;
@@ -47,9 +45,9 @@ public class GestaoHospital {
 
         leitor = new LeitorFicheiros(String.valueOf(configuracao.getSeparador()));
         gestor = new GestorFicheiros(String.valueOf(configuracao.getSeparador()));
-
+        this.gestorDeTurnos = new GestaoTurnos(this);
         carregarDadosIniciais();
-        gestor.escreverLog("logs.txt", "Sistema iniciado - Dia " + diasDecorridos);
+        gestor.escreverLog("logs.txt", "Sistema iniciado - Dia " + + gestorDeTurnos.getDiasDecorridos());
     }
 
     // ================== CARREGAMENTO DE DADOS ==================
@@ -69,11 +67,7 @@ public class GestaoHospital {
             }
 
             // Carregar médicos
-            Medico[] medLidos = leitor.lerMedicos(
-                    caminho + "medicos.txt",
-                    especialidades,
-                    totalEspecialidades
-            );
+            Medico[] medLidos = leitor.lerMedicos(caminho + "medicos.txt");
             if (medLidos != null) {
                 for (Medico m : medLidos) {
                     if (m != null && totalMedicos < medicos.length)
@@ -90,7 +84,7 @@ public class GestaoHospital {
                 }
             }
 
-            InputsAuxiliares.imprimirSucesso("Dados carregados: " + totalEspecialidades + " especialidades, " + totalMedicos + " médicos, " + totalSintomas + " sintomas.");
+            InputsAuxiliares.imprimirSucesso("Dados carregados com sucesso!");
 
         } catch (Exception e) {
             InputsAuxiliares.imprimirErro("Erro ao carregar dados: " + e.getMessage());
@@ -184,11 +178,11 @@ public class GestaoHospital {
 
     // ================== ESTATÍSTICAS ==================
     public void mediaPacientesDia() {
-        ConsultaEstatistica.mostrarMediaPacientes(totalPacientesAtendidos, diasDecorridos);
+        ConsultaEstatistica.mostrarMediaPacientes(totalPacientesAtendidos, gestorDeTurnos.getDiasDecorridos());
     }
 
     public void tabelaSalarios() {
-        ConsultaEstatistica.mostrarTabelaSalarios(medicos, totalMedicos, diasDecorridos);
+        ConsultaEstatistica.mostrarTabelaSalarios(medicos, totalMedicos, gestorDeTurnos.getDiasDecorridos());
     }
 
     public void topEspecialidades() {
@@ -218,7 +212,7 @@ public class GestaoHospital {
             Medico m = medicos[i];
             if (m.getEspecialidade().equalsIgnoreCase(especialidade) &&
                     m.isDisponivel() &&
-                    m.estaEmServico(unidadeTempoAtual)) {
+                    m.estaEmServico(gestorDeTurnos.getUnidadeTempoAtual())){
                 return m;
             }
         }
@@ -344,7 +338,7 @@ public class GestaoHospital {
         // 3. REGISTAR PACIENTE
         if (adicionarPaciente(p)) {
             InputsAuxiliares.imprimirSucesso("PACIENTE REGISTADO COM SUCESSO!");
-            System.out.println(" Resumo da Triagem:");
+            System.out.println("📋 Resumo da Triagem:");
             System.out.println("  Nome: " + p.getNome());
             System.out.println("  Nível de Urgência: " + p.getNivelUrgencia());
             System.out.println("  Especialidade Encaminhada: " +
@@ -402,9 +396,7 @@ public class GestaoHospital {
 
         if (sintomaMaisUrgente != null && sintomaMaisUrgente.getEspecialidade() != null) {
             especialidadeFinal = sintomaMaisUrgente.getEspecialidade().getNome();
-        }
-
-        else {
+        } else {
             // Tentar encontrar qualquer sintoma com especialidade
             for (int i = 0; i < p.getTotalSintomas(); i++) {
                 Sintoma s = p.getSintomas()[i];
@@ -440,132 +432,12 @@ public class GestaoHospital {
      * AVANÇAR TEMPO - conforme enunciado (24 UT por dia)
      */
     public void avancarTempo() {
-        InputsAuxiliares.imprimirCabecalho("AVANÇAR TEMPO");
-
-        unidadeTempoAtual++;
-        if (unidadeTempoAtual > UNIDADES_POR_DIA) {
-            unidadeTempoAtual = 1;
-            diasDecorridos++;
-            System.out.println("\n🎉🎉🎉 NOVO DIA: " + diasDecorridos + " 🎉🎉🎉");
-            gestor.escreverLog("logs.txt", "Novo dia: " + diasDecorridos);
-        }
-
-        System.out.println(" Hora atual: " + unidadeTempoAtual + " UT");
-        System.out.println(" Dia: " + diasDecorridos);
-
-        // 1. PROCESSAR CONSULTAS EM CURSO
-        for (int i = 0; i < totalConsultas; i++) {
-            if (consultas[i] != null) {
-                consultas[i].avancarTempo();
-
-                // Verificar descanso do médico (conforme enunciado)
-                Medico m = consultas[i].getMedico();
-                if (m.precisaDescanso(configuracao.getHorasTrabalhoParaDescanso())) {
-                    System.out.println("⚠ MÉDICO PRECISA DESCANSO: " + m.getNome() +
-                            " (" + m.getHorasTrabalhoContinuo() + " UT contínuas)");
-                    // Aqui poderia forçar pausa se implementado
-                }
-
-                if (consultas[i].terminou()) {
-                    terminarConsulta(i);
-                    i--; // Ajustar índice após remoção
-                }
-            }
-        }
-
-        // 2. ATUALIZAR TEMPO DE ESPERA DOS PACIENTES
-        for (int i = 0; i < totalPacientes; i++) {
-            if (pacientes[i] != null && !pacientes[i].isEmAtendimento()) {
-                pacientes[i].incrementarTempoEspera();
-                verificarAgravamento(pacientes[i]);
-            }
-        }
-
-        // 3. VERIFICAR DISPONIBILIDADE DE MÉDICOS (horário de serviço)
-        for (int i = 0; i < totalMedicos; i++) {
-            Medico m = medicos[i];
-            if (!m.estaEmServico(unidadeTempoAtual) && !m.isDisponivel()) {
-                // Médico saiu do horário mas está em consulta
-                System.out.println("⚠ Médico " + m.getNome() +
-                        " está além do horário (em consulta)");
-            }
-        }
-
-        // 4. ALOCAR PACIENTES AUTOMATICAMENTE
-        alocarPacientesAutomaticamente();
-
-        gestor.escreverLog("logs.txt", "Tempo avançado para UT: " + unidadeTempoAtual);
-    }
-
-    private void terminarConsulta(int index) {
-        Consulta c = consultas[index];
-        Medico m = c.getMedico();
-        Paciente p = c.getPaciente();
-
-        m.setDisponivel(true);
-        p.setEmAtendimento(false);
-
-        // Remover consulta (shift left manual)
-        for (int i = index; i < totalConsultas - 1; i++) {
-            consultas[i] = consultas[i + 1];
-        }
-        consultas[--totalConsultas] = null;
-
-        totalPacientesAtendidos++;
-
-        System.out.println(" CONSULTA TERMINADA: " + p.getNome() +
-                " atendido por Dr. " + m.getNome());
-
-        gestor.escreverLog("logs.txt",
-                "Consulta terminada: " + p.getNome() + " -> Dr. " + m.getNome());
-    }
-
-    /**
-     * AGRAVAMENTO conforme enunciado
-     */
-    private void verificarAgravamento(Paciente p) {
-        int espera = p.getTempoEspera();
-        String urg = p.getNivelUrgencia();
-
-        if (urg.equals("Baixa") && espera >= configuracao.getTempoBaixaParaMedia()) {
-            p.setNivelUrgencia("Média");
-            System.out.println(" AGRAVAMENTO: " + p.getNome() + " agravou para MÉDIA");
-            gestor.escreverLog("logs.txt",
-                    "Agravamento: " + p.getNome() + " -> Média");
-        } else if (urg.equals("Média") && espera >= configuracao.getTempoMediaParaUrgente()) {
-            p.setNivelUrgencia("Urgente");
-            System.out.println(" AGRAVAMENTO: " + p.getNome() + " agravou para URGENTE");
-            gestor.escreverLog("logs.txt",
-                    "Agravamento: " + p.getNome() + " -> Urgente");
-        } else if (urg.equals("Urgente") && espera >= configuracao.getTempoUrgenteParaSaida()) {
-            System.out.println(" URGENTE CRÍTICO: " + p.getNome() +
-                    " precisa atenção imediata!");
-            gestor.escreverLog("logs.txt",
-                    "Urgente crítico: " + p.getNome());
-        }
-    }
-
-    private void alocarPacientesAutomaticamente() {
-        // Ordenar por urgência: Urgente > Média > Baixa
-        for (int i = 0; i < totalPacientes; i++) {
-            Paciente p = pacientes[i];
-            if (p == null || p.isEmAtendimento() || p.getEspecialidadeDesejada() == null)
-                continue;
-
-            Medico m = procurarMedicoPorEspecialidade(p.getEspecialidadeDesejada());
-            if (m != null && m.isDisponivel() && m.estaEmServico(unidadeTempoAtual)) {
-                int tempo = switch (p.getNivelUrgencia()) {
-                    case "Baixa" -> configuracao.getTempoConsultaBaixa();
-                    case "Média" -> configuracao.getTempoConsultaMedia();
-                    case "Urgente" -> configuracao.getTempoConsultaUrgente();
-                    default -> 1;
-                };
-
-                if (criarConsulta(m, p, tempo)) {
-                    System.out.println(" ALOCADO: " + p.getNome() +
-                            " -> Dr. " + m.getNome() + " (" + p.getNivelUrgencia() + ")");
-                }
-            }
+        // Classe GestaoTurnos faz o avançar o tempo
+        // tem a lógica de simulação, relógio, descanso e assim.
+        if (this.gestorDeTurnos != null) {
+            this.gestorDeTurnos.avancarUnidadeTempo();
+        } else {
+            System.out.println("ERRO: Gestor de Turnos não inicializado.");
         }
     }
 
@@ -719,10 +591,37 @@ public class GestaoHospital {
             bw.close();
 
             gestor.escreverLog("logs.txt",
-                    "Dados guardados com sucesso ao encerrar (Dia " + diasDecorridos + ")");
+                    "Dados guardados com sucesso ao encerrar (Dia " + gestorDeTurnos.getDiasDecorridos() + ")");
 
         } catch (java.io.IOException e) {
             InputsAuxiliares.imprimirErro("Erro ao guardar dados: " + e.getMessage());
+        }
+    }
+
+    // ver medicos
+    public Medico[] getListaMedicos() {
+        return this.medicos;
+    }
+
+    public Paciente[] getFilaEspera() {
+        return this.pacientes;
+    }
+
+    // remover pacientes
+    public void removerPacienteDaFila(int index) {
+        if (index >= 0 && index < totalPacientes) {
+            for (int i = index; i < totalPacientes - 1; i++) {
+                pacientes[i] = pacientes[i + 1];
+            }
+            pacientes[--totalPacientes] = null;
+        }
+    }
+
+    // guardar historico no gestorTurnos
+    public void adicionarAoHistorico(Consulta c) {
+        totalPacientesAtendidos++;
+        if (gestor != null) {
+            gestor.escreverLog("logs.txt", "Histórico: Consulta terminada - " + c.getPaciente().getNome());
         }
     }
 }
