@@ -617,7 +617,7 @@ public class GestaoHospital {
         }
     }
 
-    // guardar historico no gestorTurnos
+    // guuuardar historico no gestorTurnos
     public void adicionarAoHistorico(Consulta c) {
         totalPacientesAtendidos++;
         if (gestor != null) {
