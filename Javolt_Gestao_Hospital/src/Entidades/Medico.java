@@ -56,7 +56,9 @@ public class Medico {
 
     // Verifica se o médico está em serviço na unidade de tempo atual
     public boolean estaEmServico(int unidadeTempo) {
-        return unidadeTempo >= horaEntrada && unidadeTempo <= horaSaida;
+        return disponivel &&
+                unidadeTempo >= horaEntrada &&
+                unidadeTempo < horaSaida;
     }
 
     @Override
