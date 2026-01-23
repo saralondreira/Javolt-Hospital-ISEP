@@ -66,11 +66,14 @@ public class GestaoTurnos {
                 c.avancarTempo();
                 m.adicionarHorasTrabalhadas(1.0);
 
+
+
                 if (c.terminou()) {
                     System.out.println("CONSULTA TERMINADA: Dr. " + m.getNome() + " terminou com " + c.getPaciente().getNome());
 
                     gestaoHospital.adicionarAoHistorico(c);
 
+                    c.getPaciente().setEmAtendimento(false);
                     m.setDisponivel(true);
                     consultasAtivas[i] = null;
                 }
@@ -138,6 +141,7 @@ public class GestaoTurnos {
             boolean turnoValido = unidadeTempoAtual >= m.getHoraEntrada() && unidadeTempoAtual < m.getHoraSaida();
             if (!turnoValido) continue;
 
+            // comentado so para testes nada defenitivo
             if (m.getHorasTrabalhoContinuo() == 0 && m.getHorasTrabalhadas() > 0) {
                 continue;
             }
@@ -162,18 +166,42 @@ public class GestaoTurnos {
         int maiorUrgencia = -1;
 
         for (int i = 0; i < fila.length; i++) {
-            if (fila[i] != null) {
-                if (fila[i].getEspecialidadeDesejada().equalsIgnoreCase(especialidadeMedico)) {
+            if (fila[i] == null) continue;
 
-                    if (fila[i].getNivelUrgenciaNumerico() > maiorUrgencia) {
-                        maiorUrgencia = fila[i].getNivelUrgenciaNumerico();
-                        indexMelhor = i;
-                    }
+            String espPac = fila[i].getEspecialidadeDesejada();
+            if (espPac == null) continue;
+
+            // remover acentos
+            String esp = java.text.Normalizer.normalize(espPac, java.text.Normalizer.Form.NFD);
+            esp = esp.replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
+            esp = esp.toLowerCase().trim();
+
+            String codPaciente = "";
+
+            // ordem correta (evita ortopedia -> pedi)
+            if (esp.contains("orto")) codPaciente = "ORTO";
+            else if (esp.contains("pediatr")) codPaciente = "PEDI";
+            else if (esp.contains("card")) codPaciente = "CARD";
+            else if (esp.contains("clinica")) codPaciente = especialidadeMedico; // Clínica Geral = qualquer médico disponivel
+
+            if (codPaciente.equalsIgnoreCase(especialidadeMedico)) {
+                int urg = fila[i].getNivelUrgenciaNumerico();
+                if (urg > maiorUrgencia) {
+                    maiorUrgencia = urg;
+                    indexMelhor = i;
                 }
             }
         }
         return indexMelhor;
     }
+
+
+
+
+
+
+
+
 
     private void iniciarConsulta(Medico m, Paciente p, int duracao) {
         Consulta novaConsulta = new Consulta(m, p, duracao);
@@ -183,6 +211,7 @@ public class GestaoTurnos {
             if (consultasAtivas[i] == null) {
                 consultasAtivas[i] = novaConsulta;
                 m.setDisponivel(false);
+                p.setEmAtendimento(true);
                 System.out.println("ATRIBUICAO: Dr. " + m.getNome() + " -> " + p.getNome() + " (Duracao: " + duracao + "h)");
                 adicionado = true;
                 return;
@@ -193,4 +222,13 @@ public class GestaoTurnos {
             System.out.println("ERRO CRITICO: Limite de consultas simultaneas atingido!");
         }
     }
+
+    //tentativa de encontrar onde pode estar o erro PS:remover depois
+    private String norm(String s) {
+        if (s == null) return "";
+        s = java.text.Normalizer.normalize(s, java.text.Normalizer.Form.NFD);
+        s = s.replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
+        return s.trim().toLowerCase();
+    }
+
 }
