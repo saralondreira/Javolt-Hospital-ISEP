@@ -17,7 +17,6 @@ public class Sintoma {
 
     @Override
     public String toString() {
-        return nome + " (" + nivelUrgencia + ")" +
-                (especialidade != null ? " -> " + especialidade.getNome() : "");
+        return nome + " (" + nivelUrgencia + ")" + (especialidade != null ? " -> " + especialidade.getNome() : "");
     }
 }

@@ -80,17 +80,12 @@ public class InputsAuxiliares {
      */
     public static int lerInteiroIntervalo(String msg, int min, int max) {
         while (true) {
-            int valor = lerInteiro(msg);
-
-            if (valor == Integer.MIN_VALUE) {
-                return valor; // Cancelado
-            }
-
-            if (valor >= min && valor <= max) {
-                return valor;
-            }
-
-            System.out.println(">> ERRO: O valor deve estar entre " + min + " e " + max + ".");
+            try {
+                System.out.print(msg);
+                int v = Integer.parseInt(scanner.nextLine());
+                if (v >= min && v <= max) return v;
+            } catch (Exception ignored) {}
+            imprimirErro("Valor inválido.");
         }
     }
 

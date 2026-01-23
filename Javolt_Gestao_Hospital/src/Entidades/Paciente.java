@@ -14,6 +14,7 @@ public class Paciente {
         this.sintomas = new Sintoma[maxSintomas];
         this.totalSintomas = 0;
         this.tempoEspera = 0;
+        this.especialidadeDesejada = "Clínica Geral";
         this.emAtendimento = false;
         this.nivelUrgencia = "Baixa";
     }
@@ -48,13 +49,50 @@ public class Paciente {
     public void setEspecialidadeDesejada(String especialidade) { this.especialidadeDesejada = especialidade; }
     public void setTempoEspera(int tempoEspera) { this.tempoEspera = tempoEspera; }
 
-    public void incrementarTempoEspera() { tempoEspera++; }
+    public void incrementarTempoEspera() {
+        tempoEspera++;
+    }
+
+    // getter para o gestorTurnos
+    // 1=Baixa/Verde, 2=Média/Laranja, 3=Urgente/Vermelho
+    public int getNivelUrgenciaNumerico() {
+        if (this.nivelUrgencia == null) return 1;
+
+        if (this.nivelUrgencia.equalsIgnoreCase("Urgente") ||
+                this.nivelUrgencia.equalsIgnoreCase("Vermelho")) {
+            return 3;
+        }
+        if (this.nivelUrgencia.equalsIgnoreCase("Média") ||
+                this.nivelUrgencia.equalsIgnoreCase("Media") ||
+                this.nivelUrgencia.equalsIgnoreCase("Laranja")) {
+            return 2;
+        }
+        return 1; // Baixa
+    }
+
+    public void atualizarUrgenciaPorNumero(int nivelNumerico) {
+        switch (nivelNumerico) {
+            case 3: this.nivelUrgencia = "Urgente"; break;
+            case 2: this.nivelUrgencia = "Média"; break;
+            default: this.nivelUrgencia = "Baixa"; break;
+        }
+    }
 
     @Override
     public String toString() {
-        return String.format("%-20s %-10s %-20s %-10s %d sintomas",
+        return String.format("%-20s %-10s %-20s %-10s Esp: %d",
                 nome, nivelUrgencia,
-                (especialidadeDesejada != null ? especialidadeDesejada : "N/D"),
-                (emAtendimento ? "Em atend." : "Em espera"), totalSintomas);
+                especialidadeDesejada,
+                (emAtendimento ? "Em Atend." : "Espera"),
+                tempoEspera);
+    }
+
+    // Urgencia passa a numeros no GestaoTurnos
+    public void setNivelUrgencia(int nivelNumerico) {
+        switch (nivelNumerico) {
+            case 3: this.nivelUrgencia = "Urgente"; break;
+            case 2: this.nivelUrgencia = "Média"; break;
+            default: this.nivelUrgencia = "Baixa"; break;
+        }
     }
 }

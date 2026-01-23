@@ -71,7 +71,7 @@ public class Menu {
             System.out.println("0 - Voltar");
             InputsAuxiliares.imprimirLinha();
 
-            opcao = InputsAuxiliares.lerInt("Opção: ");
+            opcao = InputsAuxiliares.lerInteiroIntervalo("Opção: ", 0, 5);
 
             switch (opcao) {
                 case 1 -> {
@@ -117,7 +117,8 @@ public class Menu {
             System.out.println("0 - Voltar");
             InputsAuxiliares.imprimirLinha();
 
-            opcao = InputsAuxiliares.lerInt("Opção: ");
+            opcao = InputsAuxiliares.lerInteiroIntervalo("Opção: ", 0, 4);
+
 
             switch (opcao) {
                 case 1 -> gestaoHospital.mediaPacientesDia();
@@ -147,7 +148,8 @@ public class Menu {
             System.out.println("0 - Voltar");
             InputsAuxiliares.imprimirLinha();
 
-            opcao = InputsAuxiliares.lerInt("Opção: ");
+            opcao = InputsAuxiliares.lerInteiroIntervalo("Opção: ", 0, 4);
+
 
             switch (opcao) {
                 case 1 -> gestaoHospital.alterarCaminhoFicheiros();
@@ -177,7 +179,7 @@ public class Menu {
             System.out.println("0 - Voltar");
             InputsAuxiliares.imprimirLinha();
 
-            opcao = InputsAuxiliares.lerInt("Opção: ");
+            opcao = InputsAuxiliares.lerInteiroIntervalo("Opção: ", 0, 3);
 
             switch (opcao) {
                 case 1 -> subMedicos.menuMedicos(gestaoHospital);
@@ -191,6 +193,6 @@ public class Menu {
 
     // ================= MÉTODOS AUXILIARES =================
     private void pausa() {
-        InputsAuxiliares.lerString("\n↵ Prima ENTER para continuar...");
+        InputsAuxiliares.lerTexto("\n↵ Prima ENTER para continuar...");
     }
 }
