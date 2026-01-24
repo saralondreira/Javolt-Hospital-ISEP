@@ -333,7 +333,7 @@ public class GestaoHospital {
         }
 
         // 2. CALCULAR URGÊNCIA E ESPECIALIDADE (conforme enunciado)
-        calcularUrgenciaEEspecialidade(p);
+        p.calcularUrgenciaEEspecialidade();
 
         // 3. REGISTAR PACIENTE
         if (adicionarPaciente(p)) {
@@ -352,63 +352,6 @@ public class GestaoHospital {
         }
     }
 
-    /**
-     * Calcula urgência e especialidade conforme enunciado:
-     * - Urgência baseada no sintoma mais urgente
-     * - Especialidade baseada no sintoma mais urgente que tenha especialidade
-     */
-    private void calcularUrgenciaEEspecialidade(Paciente p) {
-        String maiorUrgencia = "Verde";
-        Sintoma sintomaMaisUrgente = null;
-
-        // Encontrar o sintoma mais urgente
-        for (int i = 0; i < p.getTotalSintomas(); i++) {
-            Sintoma s = p.getSintomas()[i];
-            String urg = s.getNivelUrgencia();
-
-            // Hierarquia: Vermelho > Laranja > Verde
-            if (urg.equalsIgnoreCase("Vermelho")) {
-                maiorUrgencia = "Vermelho";
-                sintomaMaisUrgente = s;
-                break; // Máxima prioridade encontrada
-            } else if (urg.equalsIgnoreCase("Laranja") && !maiorUrgencia.equals("Vermelho")) {
-                maiorUrgencia = "Laranja";
-                sintomaMaisUrgente = s;
-            } else if (urg.equalsIgnoreCase("Verde") &&
-                    !maiorUrgencia.equals("Vermelho") &&
-                    !maiorUrgencia.equals("Laranja")) {
-                maiorUrgencia = "Verde";
-                if (sintomaMaisUrgente == null) sintomaMaisUrgente = s;
-            }
-        }
-
-        // Converter para níveis do sistema
-        String nivelSistema;
-        switch (maiorUrgencia) {
-            case "Vermelho": nivelSistema = "Urgente"; break;
-            case "Laranja": nivelSistema = "Média"; break;
-            default: nivelSistema = "Baixa"; break;
-        }
-        p.setNivelUrgencia(nivelSistema);
-
-        // Determinar especialidade
-        String especialidadeFinal = "Clínica Geral"; // Valor padrão
-
-        if (sintomaMaisUrgente != null && sintomaMaisUrgente.getEspecialidade() != null) {
-            especialidadeFinal = sintomaMaisUrgente.getEspecialidade().getNome();
-        } else {
-            // Tentar encontrar qualquer sintoma com especialidade
-            for (int i = 0; i < p.getTotalSintomas(); i++) {
-                Sintoma s = p.getSintomas()[i];
-                if (s.getEspecialidade() != null) {
-                    especialidadeFinal = s.getEspecialidade().getNome();
-                    break;
-                }
-            }
-        }
-
-        p.setEspecialidadeDesejada(especialidadeFinal);
-    }
 
     // ================== GESTÃO DE CONSULTAS E TEMPO ==================
     public boolean criarConsulta(Medico medico, Paciente paciente, int tempoConsulta) {

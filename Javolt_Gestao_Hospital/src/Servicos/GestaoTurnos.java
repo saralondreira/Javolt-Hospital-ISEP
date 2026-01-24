@@ -67,7 +67,6 @@ public class GestaoTurnos {
                 m.adicionarHorasTrabalhadas(1.0);
 
 
-
                 if (c.terminou()) {
                     System.out.println("CONSULTA TERMINADA: Dr. " + m.getNome() + " terminou com " + c.getPaciente().getNome());
 
@@ -114,13 +113,11 @@ public class GestaoTurnos {
                 p.setNivelUrgencia(2);
                 p.setTempoEspera(0);
                 System.out.println("ESCALADA: " + p.getNome() + " subiu para prioridade MEDIA.");
-            }
-            else if (nivel == 2 && espera >= 3) {
+            } else if (nivel == 2 && espera >= 3) {
                 p.setNivelUrgencia(3);
                 p.setTempoEspera(0);
                 System.out.println("ESCALADA: " + p.getNome() + " subiu para prioridade URGENTE.");
-            }
-            else if (nivel == 3 && espera >= 2) {
+            } else if (nivel == 3 && espera >= 2) {
                 System.out.println("SAIDA POR TEMPO EXCESSIVO: " + p.getNome() + " abandonou a urgencia.");
 
                 gestaoHospital.removerPacienteDaFila(i);
@@ -162,45 +159,51 @@ public class GestaoTurnos {
     }
 
     private int encontrarMelhorPaciente(Paciente[] fila, String especialidadeMedico) {
-        int indexMelhor = -1;
-        int maiorUrgencia = -1;
 
+        // 1️⃣ Procurar URGENTES
         for (int i = 0; i < fila.length; i++) {
-            if (fila[i] == null) continue;
+            Paciente p = fila[i];
+            if (p == null) continue;
+            if (p.isEmAtendimento()) continue;
 
-            String espPac = fila[i].getEspecialidadeDesejada();
-            if (espPac == null) continue;
+            if (p.getEspecialidadeDesejada() == null) continue;
 
-            // remover acentos
-            String esp = java.text.Normalizer.normalize(espPac, java.text.Normalizer.Form.NFD);
-            esp = esp.replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
-            esp = esp.toLowerCase().trim();
-
-            String codPaciente = "";
-
-            // ordem correta (evita ortopedia -> pedi)
-            if (esp.contains("orto")) codPaciente = "ORTO";
-            else if (esp.contains("pediatr")) codPaciente = "PEDI";
-            else if (esp.contains("card")) codPaciente = "CARD";
-            else if (esp.contains("clinica")) codPaciente = especialidadeMedico; // Clínica Geral = qualquer médico disponivel
-
-            if (codPaciente.equalsIgnoreCase(especialidadeMedico)) {
-                int urg = fila[i].getNivelUrgenciaNumerico();
-                if (urg > maiorUrgencia) {
-                    maiorUrgencia = urg;
-                    indexMelhor = i;
-                }
+            if (p.getEspecialidadeDesejada().equalsIgnoreCase(especialidadeMedico)
+                    && p.getNivelUrgencia().equalsIgnoreCase("Urgente")) {
+                return i;
             }
         }
-        return indexMelhor;
+
+        // 2️⃣ Procurar MÉDIOS
+        for (int i = 0; i < fila.length; i++) {
+            Paciente p = fila[i];
+            if (p == null) continue;
+            if (p.isEmAtendimento()) continue;
+
+            if (p.getEspecialidadeDesejada() == null) continue;
+
+            if (p.getEspecialidadeDesejada().equalsIgnoreCase(especialidadeMedico)
+                    && p.getNivelUrgencia().equalsIgnoreCase("Média")) {
+                return i;
+            }
+        }
+
+        // 3️⃣ Procurar BAIXOS
+        for (int i = 0; i < fila.length; i++) {
+            Paciente p = fila[i];
+            if (p == null) continue;
+            if (p.isEmAtendimento()) continue;
+
+            if (p.getEspecialidadeDesejada() == null) continue;
+
+            if (p.getEspecialidadeDesejada().equalsIgnoreCase(especialidadeMedico)
+                    && p.getNivelUrgencia().equalsIgnoreCase("Baixa")) {
+                return i;
+            }
+        }
+
+        return -1; // nenhum paciente encontrado
     }
-
-
-
-
-
-
-
 
 
     private void iniciarConsulta(Medico m, Paciente p, int duracao) {
@@ -222,13 +225,4 @@ public class GestaoTurnos {
             System.out.println("ERRO CRITICO: Limite de consultas simultaneas atingido!");
         }
     }
-
-    //tentativa de encontrar onde pode estar o erro PS:remover depois
-    private String norm(String s) {
-        if (s == null) return "";
-        s = java.text.Normalizer.normalize(s, java.text.Normalizer.Form.NFD);
-        s = s.replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
-        return s.trim().toLowerCase();
-    }
-
 }
