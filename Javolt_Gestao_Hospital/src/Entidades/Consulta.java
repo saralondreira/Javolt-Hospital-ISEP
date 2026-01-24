@@ -17,6 +17,8 @@ public class Consulta {
         if (tempoRestante > 0) tempoRestante--;
     }
 
+
+
     public boolean terminou() { return tempoRestante <= 0; }
 
     public Medico getMedico() { return medico; }

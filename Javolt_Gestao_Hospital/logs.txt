@@ -41,3 +41,11 @@
 2026-01-23T21:01:22.585460400 - Paciente registado: crlh1 - Urgência: Média
 2026-01-23T21:03:46.174908300 - Histórico: Consulta terminada - crlh1
 2026-01-24T14:31:22.359328800 - Sistema iniciado - Dia 1
+2026-01-24T14:36:10.763642 - Sistema iniciado - Dia 1
+2026-01-24T14:36:49.911305800 - Paciente registado: teste1 - Urgência: Média
+2026-01-24T14:39:37.435020400 - Paciente registado: teste ver de passsa para card - Urgência: Baixa
+2026-01-24T14:41:39.674351400 - Paciente registado: test prioridade - Urgência: Baixa
+2026-01-24T14:42:00.506515900 - Paciente registado: teste prioridade verde - Urgência: Baixa
+2026-01-24T15:24:54.899696900 - Sistema iniciado - Dia 1
+2026-01-24T15:25:24.993250400 - Paciente registado: teste - Urgência: Média
+2026-01-24T15:26:09.241204100 - Paciente registado: teste card - Urgência: Baixa
