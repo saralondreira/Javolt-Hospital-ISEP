@@ -57,3 +57,11 @@
 2026-01-24T17:10:24.977865300 - Paciente registado: teste 3 - Urgência: Baixa
 2026-01-24T18:30:47.192694700 - Sistema iniciado - Dia 1
 2026-01-24T18:31:33.119071100 - Paciente registado: sara - Urgência: Urgente
+2026-01-24T19:36:47.960520 - Sistema iniciado - Dia 1
+2026-01-24T20:42:34.944199300 - Sistema iniciado - Dia 1
+2026-01-24T20:44:05.883935500 - Sistema iniciado - Dia 1
+2026-01-24T20:45:01.565065500 - Sistema iniciado - Dia 1
+2026-01-24T20:45:19.652375300 - Sistema iniciado - Dia 1
+2026-01-24T20:46:01.835450 - Sistema iniciado - Dia 1
+2026-01-24T20:49:29.202999400 - Sistema iniciado - Dia 1
+2026-01-24T20:57:37.284918800 - Sistema iniciado - Dia 1
