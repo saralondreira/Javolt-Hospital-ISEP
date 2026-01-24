@@ -35,8 +35,12 @@ public class Menu {
                 case 3 -> menuConfiguracoes();
                 case 4 -> menuGestaoDados(); // NOVO: Menu de gestão CRUD
                 case 0 -> {
-                    System.out.println("\n A guardar dados...");
-                    gestaoHospital.guardarDados();
+                    if (InputsAuxiliares.confirmar("Deseja guardar as alterações antes de sair?")){
+                        System.out.println("\n A guardar dados...");
+                        gestaoHospital.guardarDados();
+                    } else {
+                        System.out.println("\n A sair sem guardar alterações...");
+                    }
                     System.out.println("  Obrigado por utilizar o sistema Javolt Hospital.");
                     System.out.println("   A encerrar...");
                 }
