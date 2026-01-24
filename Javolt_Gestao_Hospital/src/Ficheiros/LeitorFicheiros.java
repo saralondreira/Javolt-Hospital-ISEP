@@ -44,7 +44,7 @@ public class LeitorFicheiros {
         return lista;
     }
 
-    public Medico[] lerMedicos(String caminho) {
+    public Medico[] lerMedicos(String caminho, Especialidade[] especialidadeSistema) {
         int total = contarLinhas(caminho);
         Medico[] lista = new Medico[total];
 
@@ -55,9 +55,18 @@ public class LeitorFicheiros {
             while ((linha = br.readLine()) != null) {
                 String[] partes = linha.split(separador);
                 if (partes.length == 5) {
+                    String especialidadeTexto = partes[1];
+                    if(especialidadeSistema != null){
+                        for (Especialidade esp : especialidadeSistema){
+                            if (esp != null && esp.getCodigo().equalsIgnoreCase(partes[1])) {
+                                especialidadeTexto = esp.toString();
+                                break;
+                            }
+                        }
+                    }
                     lista[i++] = new Medico(
                             partes[0], // nome
-                            partes[1], // especialidade
+                            especialidadeTexto, // especialidade
                             Integer.parseInt(partes[2]), // entrada
                             Integer.parseInt(partes[3]), // saida
                             Double.parseDouble(partes[4]) // valor hora
