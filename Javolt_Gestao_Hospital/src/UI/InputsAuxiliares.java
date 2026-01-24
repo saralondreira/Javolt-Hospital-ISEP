@@ -43,7 +43,7 @@ public class InputsAuxiliares {
             String input = scanner.nextLine().trim();
 
             if (input.isEmpty()) {
-                System.out.println(">> ERRO: O campo não pode estar vazio.");
+                imprimirErro("O campo não pode estar vazio.");
                 continue;
             }
             return input;
@@ -70,7 +70,7 @@ public class InputsAuxiliares {
             try {
                 return Integer.parseInt(input);
             } catch (NumberFormatException e) {
-                System.out.println(">> ERRO: Insira um número inteiro válido.");
+                imprimirErro("Insira um número inteiro válido.");
             }
         }
     }
@@ -107,7 +107,7 @@ public class InputsAuxiliares {
             try {
                 return Double.parseDouble(input);
             } catch (NumberFormatException e) {
-                System.out.println(">> ERRO: Insira um número decimal válido.");
+                imprimirErro("Insira um número decimal válido.");
             }
         }
     }
@@ -126,7 +126,7 @@ public class InputsAuxiliares {
                 return input.charAt(0);
             }
 
-            System.out.println(">> ERRO: Insira apenas um caractere.");
+            imprimirErro("Insira apenas um caractere.");
         }
     }
 
@@ -155,7 +155,7 @@ public class InputsAuxiliares {
                 }
             }
 
-            System.out.println(">> ERRO: Separador inválido. Use ; , | ou TAB");
+            imprimirErro("Separador inválido. Use ; , | ou TAB");
         }
     }
 
@@ -176,7 +176,7 @@ public class InputsAuxiliares {
             try {
                 return LocalDateTime.parse(input, dateTimeFormatter);
             } catch (DateTimeParseException e) {
-                System.out.println(">> ERRO: Formato inválido. Use dia-mes-ano hora:minuto");
+                imprimirErro("Formato inválido. Use dia-mes-ano hora:minuto");
             }
         }
     }

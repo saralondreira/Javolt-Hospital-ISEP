@@ -289,30 +289,63 @@ public class GestaoHospital {
     }
 
     /**
-     * TRIAGEM COMPLETA - conforme enunciado
+     * TRIAGEM COMPLETA - Com pesquisa de sintomas
      */
     public void registarPaciente() {
         InputsAuxiliares.imprimirCabecalho("TRIAGEM DE PACIENTE");
 
         String nome = InputsAuxiliares.lerTextoNaoVazio("Nome do paciente: ");
-        Paciente p = new Paciente(nome, 5); // Limite de 5 sintomas conforme enunciado
+        Paciente p = new Paciente(nome, 5);
 
-        // 1. SELECIONAR SINTOMAS
+        // 1. SELECIONAR SINTOMAS COM PESQUISA
         boolean adicionarMais = true;
+
         while (adicionarMais && p.getTotalSintomas() < 5) {
-            System.out.println("\n--- LISTA DE SINTOMAS DISPONÍVEIS ---");
+            System.out.println("\n--- ADICIONAR SINTOMA (" + (p.getTotalSintomas() + 1) + "/5) ---");
+            System.out.println("Escreva parte do nome para pesquisar (ex: 'cabeca', 'dor')");
+            System.out.println("Ou prima ENTER sem escrever nada para ver a lista completa.");
+
+            String termo = InputsAuxiliares.lerTexto("Pesquisa: ").trim().toLowerCase();
+
+            // Array auxiliar para mapear a escolha do utilizador para o índice real do array 'sintomas'
+            int[] indicesEncontrados = new int[totalSintomas];
+            int qtdEncontrados = 0;
+
+            System.out.println("\n--- RESULTADOS DA PESQUISA ---");
             for (int i = 0; i < totalSintomas; i++) {
-                System.out.printf("%d. %s%n", (i + 1), sintomas[i]);
+                // Se termo vazio mostra tudo, se não, filtra pelo nome
+                if (termo.isEmpty() || sintomas[i].getNome().toLowerCase().contains(termo)) {
+                    // Guarda o índice original deste sintoma
+                    indicesEncontrados[qtdEncontrados] = i;
+                    qtdEncontrados++;
+
+                    // Mostra a opção (ex: 1. Dor de cabeça)
+                    System.out.printf("%d. %s%n", qtdEncontrados, sintomas[i]);
+                }
             }
-            System.out.println("0. Terminar seleção");
+
+            if (qtdEncontrados == 0) {
+                System.out.println(">> Nenhum sintoma encontrado.");
+                if (!InputsAuxiliares.confirmar("Deseja tentar nova pesquisa? (N para terminar seleção)")) {
+                    adicionarMais = false;
+                }
+                continue; // Volta ao início para nova pesquisa
+            }
+
+            System.out.println("0. Cancelar / Nova Pesquisa");
+            System.out.println("-1. Terminar Seleção de Sintomas e Finalizar");
 
             int escolha = InputsAuxiliares.lerInteiroIntervalo(
-                    "Escolha o sintoma (número): ", 0, totalSintomas);
+                    "Escolha o sintoma (número): ", -1, qtdEncontrados);
 
             if (escolha == 0) {
-                adicionarMais = false;
+                continue; // Volta a pesquisar
+            } else if (escolha == -1) {
+                adicionarMais = false; // Sai do loop
             } else {
-                Sintoma selecionado = sintomas[escolha - 1];
+                // Recupera o sintoma original usando o índice mapeado
+                int indiceReal = indicesEncontrados[escolha - 1];
+                Sintoma selecionado = sintomas[indiceReal];
 
                 // Verificar se já tem o sintoma
                 boolean jaTem = p.temSintoma(selecionado.getNome());
@@ -321,18 +354,23 @@ public class GestaoHospital {
                     p.adicionarSintoma(selecionado);
                     System.out.println("✓ Sintoma adicionado: " + selecionado.getNome());
                 } else {
-                    System.out.println(" Paciente já tem esse sintoma.");
+                    System.out.println(">> O paciente já tem esse sintoma registado.");
                 }
 
                 if (p.getTotalSintomas() >= 5) {
-                    System.out.println(" Limite de 5 sintomas atingido.");
+                    System.out.println(">> Limite de 5 sintomas atingido.");
                     adicionarMais = false;
+                } else {
+                    // Pergunta rápida se quer continuar, para agilizar
+                    if (!InputsAuxiliares.confirmar("Adicionar outro sintoma?")) {
+                        adicionarMais = false;
+                    }
                 }
             }
         }
 
         if (p.getTotalSintomas() == 0) {
-            InputsAuxiliares.imprimirErro("Paciente tem de ter pelo menos um sintoma.");
+            InputsAuxiliares.imprimirErro("Paciente tem de ter pelo menos um sintoma para ser registado.");
             return;
         }
 
