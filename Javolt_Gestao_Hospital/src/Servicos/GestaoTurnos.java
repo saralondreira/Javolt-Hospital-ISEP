@@ -138,11 +138,6 @@ public class GestaoTurnos {
             boolean turnoValido = unidadeTempoAtual >= m.getHoraEntrada() && unidadeTempoAtual < m.getHoraSaida();
             if (!turnoValido) continue;
 
-            // comentado so para testes nada defenitivo
-            if (m.getHorasTrabalhoContinuo() == 0 && m.getHorasTrabalhadas() > 0) {
-                continue;
-            }
-
             int indexPaciente = encontrarMelhorPaciente(fila, m.getEspecialidade());
 
             if (indexPaciente != -1) {
