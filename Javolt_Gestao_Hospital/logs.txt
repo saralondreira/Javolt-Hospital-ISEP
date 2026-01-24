@@ -36,3 +36,8 @@
 2026-01-22T01:46:02.573193600 - Sistema iniciado - Dia 1
 2026-01-22T01:46:16.201055700 - Paciente registado: yes - Urgência: Média
 2026-01-22T01:47:08.717049400 - Sistema iniciado - Dia 1
+2026-01-23T20:58:40.087015400 - Sistema iniciado - Dia 1
+2026-01-23T20:59:38.854256900 - Paciente registado: vrlh - Urgência: Média
+2026-01-23T21:01:22.585460400 - Paciente registado: crlh1 - Urgência: Média
+2026-01-23T21:03:46.174908300 - Histórico: Consulta terminada - crlh1
+2026-01-24T14:31:22.359328800 - Sistema iniciado - Dia 1
