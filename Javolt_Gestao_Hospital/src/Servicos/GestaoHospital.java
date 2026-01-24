@@ -190,6 +190,10 @@ public class GestaoHospital {
                 pacientes, totalPacientes);
     }
 
+    public void listarUtentesPorSintoma() {
+        ConsultaEstatistica.mostrarUtentesPorSintoma(pacientes, totalPacientes, sintomas, totalSintomas);
+    }
+
     // ================== GESTÃO DE MÉDICOS ==================
     public void listarMedicos() {
         InputsAuxiliares.imprimirCabecalho("LISTA DE MÉDICOS");
@@ -439,6 +443,14 @@ public class GestaoHospital {
             }
         }
         return false;
+    }
+
+    public void listarConsultasEmCurso() {
+        if (gestorDeTurnos != null) {
+            gestorDeTurnos.mostrarConsultasAtivas();
+        } else {
+            System.out.println("ERRO: Gestor de turnos não inicializado.");
+        }
     }
 
     // ================== GESTÃO DE SINTOMAS ==================

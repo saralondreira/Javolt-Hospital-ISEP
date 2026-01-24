@@ -55,3 +55,5 @@
 2026-01-24T17:07:20.263332900 - Paciente registado: teste orto - Urgência: Urgente
 2026-01-24T17:09:46.546994700 - Paciente registado: teste 2 - Urgência: Média
 2026-01-24T17:10:24.977865300 - Paciente registado: teste 3 - Urgência: Baixa
+2026-01-24T18:30:47.192694700 - Sistema iniciado - Dia 1
+2026-01-24T18:31:33.119071100 - Paciente registado: sara - Urgência: Urgente

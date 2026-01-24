@@ -91,8 +91,7 @@ public class Menu {
                     pausa();
                 }
                 case 5 -> {
-                    // Aqui poderia ter listarConsultas() se implementado
-                    System.out.println("\n Funcionalidade em desenvolvimento...");
+                    gestaoHospital.listarConsultasEmCurso();
                     pausa();
                 }
                 case 0 -> { /* Voltar */ }
@@ -124,10 +123,7 @@ public class Menu {
                 case 1 -> gestaoHospital.mediaPacientesDia();
                 case 2 -> gestaoHospital.tabelaSalarios();
                 case 3 -> gestaoHospital.topEspecialidades();
-                case 4 -> {
-                    // Aqui poderia chamar método específico se implementado
-                    System.out.println("\n Funcionalidade em desenvolvimento...");
-                }
+                case 4 -> gestaoHospital.listarUtentesPorSintoma();
                 case 0 -> { /* Voltar */ }
                 default -> InputsAuxiliares.imprimirErro("Opção inválida.");
             }
