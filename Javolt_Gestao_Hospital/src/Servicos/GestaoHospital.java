@@ -32,7 +32,7 @@ public class GestaoHospital {
         medicos = new Medico[100];
         pacientes = new Paciente[200];
         consultas = new Consulta[100];
-        sintomas = new Sintoma[50];
+        sintomas = new Sintoma[100];
         especialidades = new Especialidade[20];
 
         totalMedicos = 0;
@@ -317,11 +317,11 @@ public class GestaoHospital {
                     p.adicionarSintoma(selecionado);
                     System.out.println("✓ Sintoma adicionado: " + selecionado.getNome());
                 } else {
-                    System.out.println("⚠ Paciente já tem esse sintoma.");
+                    System.out.println(" Paciente já tem esse sintoma.");
                 }
 
                 if (p.getTotalSintomas() >= 5) {
-                    System.out.println("⏹ Limite de 5 sintomas atingido.");
+                    System.out.println(" Limite de 5 sintomas atingido.");
                     adicionarMais = false;
                 }
             }
@@ -333,12 +333,12 @@ public class GestaoHospital {
         }
 
         // 2. CALCULAR URGÊNCIA E ESPECIALIDADE (conforme enunciado)
-        calcularUrgenciaEEspecialidade(p);
+        p.calcularUrgenciaEEspecialidade();
 
         // 3. REGISTAR PACIENTE
         if (adicionarPaciente(p)) {
             InputsAuxiliares.imprimirSucesso("PACIENTE REGISTADO COM SUCESSO!");
-            System.out.println("📋 Resumo da Triagem:");
+            System.out.println(" Resumo da Triagem:");
             System.out.println("  Nome: " + p.getNome());
             System.out.println("  Nível de Urgência: " + p.getNivelUrgencia());
             System.out.println("  Especialidade Encaminhada: " +
@@ -352,63 +352,6 @@ public class GestaoHospital {
         }
     }
 
-    /**
-     * Calcula urgência e especialidade conforme enunciado:
-     * - Urgência baseada no sintoma mais urgente
-     * - Especialidade baseada no sintoma mais urgente que tenha especialidade
-     */
-    private void calcularUrgenciaEEspecialidade(Paciente p) {
-        String maiorUrgencia = "Verde";
-        Sintoma sintomaMaisUrgente = null;
-
-        // Encontrar o sintoma mais urgente
-        for (int i = 0; i < p.getTotalSintomas(); i++) {
-            Sintoma s = p.getSintomas()[i];
-            String urg = s.getNivelUrgencia();
-
-            // Hierarquia: Vermelho > Laranja > Verde
-            if (urg.equalsIgnoreCase("Vermelho")) {
-                maiorUrgencia = "Vermelho";
-                sintomaMaisUrgente = s;
-                break; // Máxima prioridade encontrada
-            } else if (urg.equalsIgnoreCase("Laranja") && !maiorUrgencia.equals("Vermelho")) {
-                maiorUrgencia = "Laranja";
-                sintomaMaisUrgente = s;
-            } else if (urg.equalsIgnoreCase("Verde") &&
-                    !maiorUrgencia.equals("Vermelho") &&
-                    !maiorUrgencia.equals("Laranja")) {
-                maiorUrgencia = "Verde";
-                if (sintomaMaisUrgente == null) sintomaMaisUrgente = s;
-            }
-        }
-
-        // Converter para níveis do sistema
-        String nivelSistema;
-        switch (maiorUrgencia) {
-            case "Vermelho": nivelSistema = "Urgente"; break;
-            case "Laranja": nivelSistema = "Média"; break;
-            default: nivelSistema = "Baixa"; break;
-        }
-        p.setNivelUrgencia(nivelSistema);
-
-        // Determinar especialidade
-        String especialidadeFinal = "Clínica Geral"; // Valor padrão
-
-        if (sintomaMaisUrgente != null && sintomaMaisUrgente.getEspecialidade() != null) {
-            especialidadeFinal = sintomaMaisUrgente.getEspecialidade().getNome();
-        } else {
-            // Tentar encontrar qualquer sintoma com especialidade
-            for (int i = 0; i < p.getTotalSintomas(); i++) {
-                Sintoma s = p.getSintomas()[i];
-                if (s.getEspecialidade() != null) {
-                    especialidadeFinal = s.getEspecialidade().getNome();
-                    break;
-                }
-            }
-        }
-
-        p.setEspecialidadeDesejada(especialidadeFinal);
-    }
 
     // ================== GESTÃO DE CONSULTAS E TEMPO ==================
     public boolean criarConsulta(Medico medico, Paciente paciente, int tempoConsulta) {
@@ -617,7 +560,7 @@ public class GestaoHospital {
         }
     }
 
-    // guardar historico no gestorTurnos
+    // guuuardar historico no gestorTurnos
     public void adicionarAoHistorico(Consulta c) {
         totalPacientesAtendidos++;
         if (gestor != null) {

@@ -1,0 +1,10 @@
+Configurações do Sistema:
+Caminho dos ficheiros: Recursos\/
+Separador: ;
+Tempo consulta Baixa: 1 UT
+Tempo consulta Média: 2 UT
+Tempo consulta Urgente: 3 UT
+Descanso: 1 UT a cada 5 UT trabalho
+Baixa -> Média: 3 UT
+Média -> Urgente: 3 UT
+Urgente -> Saída: 2 UT

@@ -66,11 +66,13 @@ public class GestaoTurnos {
                 c.avancarTempo();
                 m.adicionarHorasTrabalhadas(1.0);
 
+
                 if (c.terminou()) {
                     System.out.println("CONSULTA TERMINADA: Dr. " + m.getNome() + " terminou com " + c.getPaciente().getNome());
 
                     gestaoHospital.adicionarAoHistorico(c);
 
+                    c.getPaciente().setEmAtendimento(false);
                     m.setDisponivel(true);
                     consultasAtivas[i] = null;
                 }
@@ -111,13 +113,11 @@ public class GestaoTurnos {
                 p.setNivelUrgencia(2);
                 p.setTempoEspera(0);
                 System.out.println("ESCALADA: " + p.getNome() + " subiu para prioridade MEDIA.");
-            }
-            else if (nivel == 2 && espera >= 3) {
+            } else if (nivel == 2 && espera >= 3) {
                 p.setNivelUrgencia(3);
                 p.setTempoEspera(0);
                 System.out.println("ESCALADA: " + p.getNome() + " subiu para prioridade URGENTE.");
-            }
-            else if (nivel == 3 && espera >= 2) {
+            } else if (nivel == 3 && espera >= 2) {
                 System.out.println("SAIDA POR TEMPO EXCESSIVO: " + p.getNome() + " abandonou a urgencia.");
 
                 gestaoHospital.removerPacienteDaFila(i);
@@ -138,6 +138,7 @@ public class GestaoTurnos {
             boolean turnoValido = unidadeTempoAtual >= m.getHoraEntrada() && unidadeTempoAtual < m.getHoraSaida();
             if (!turnoValido) continue;
 
+            // comentado so para testes nada defenitivo
             if (m.getHorasTrabalhoContinuo() == 0 && m.getHorasTrabalhadas() > 0) {
                 continue;
             }
@@ -158,22 +159,52 @@ public class GestaoTurnos {
     }
 
     private int encontrarMelhorPaciente(Paciente[] fila, String especialidadeMedico) {
-        int indexMelhor = -1;
-        int maiorUrgencia = -1;
 
+        // 1️⃣ Procurar URGENTES
         for (int i = 0; i < fila.length; i++) {
-            if (fila[i] != null) {
-                if (fila[i].getEspecialidadeDesejada().equalsIgnoreCase(especialidadeMedico)) {
+            Paciente p = fila[i];
+            if (p == null) continue;
+            if (p.isEmAtendimento()) continue;
 
-                    if (fila[i].getNivelUrgenciaNumerico() > maiorUrgencia) {
-                        maiorUrgencia = fila[i].getNivelUrgenciaNumerico();
-                        indexMelhor = i;
-                    }
-                }
+            if (p.getEspecialidadeDesejada() == null) continue;
+
+            if (p.getEspecialidadeDesejada().equalsIgnoreCase(especialidadeMedico)
+                    && p.getNivelUrgencia().equalsIgnoreCase("Urgente")) {
+                return i;
             }
         }
-        return indexMelhor;
+
+        // 2️⃣ Procurar MÉDIOS
+        for (int i = 0; i < fila.length; i++) {
+            Paciente p = fila[i];
+            if (p == null) continue;
+            if (p.isEmAtendimento()) continue;
+
+            if (p.getEspecialidadeDesejada() == null) continue;
+
+            if (p.getEspecialidadeDesejada().equalsIgnoreCase(especialidadeMedico)
+                    && p.getNivelUrgencia().equalsIgnoreCase("Média")) {
+                return i;
+            }
+        }
+
+        // 3️⃣ Procurar BAIXOS
+        for (int i = 0; i < fila.length; i++) {
+            Paciente p = fila[i];
+            if (p == null) continue;
+            if (p.isEmAtendimento()) continue;
+
+            if (p.getEspecialidadeDesejada() == null) continue;
+
+            if (p.getEspecialidadeDesejada().equalsIgnoreCase(especialidadeMedico)
+                    && p.getNivelUrgencia().equalsIgnoreCase("Baixa")) {
+                return i;
+            }
+        }
+
+        return -1; // nenhum paciente encontrado
     }
+
 
     private void iniciarConsulta(Medico m, Paciente p, int duracao) {
         Consulta novaConsulta = new Consulta(m, p, duracao);
@@ -183,6 +214,7 @@ public class GestaoTurnos {
             if (consultasAtivas[i] == null) {
                 consultasAtivas[i] = novaConsulta;
                 m.setDisponivel(false);
+                p.setEmAtendimento(true);
                 System.out.println("ATRIBUICAO: Dr. " + m.getNome() + " -> " + p.getNome() + " (Duracao: " + duracao + "h)");
                 adicionado = true;
                 return;

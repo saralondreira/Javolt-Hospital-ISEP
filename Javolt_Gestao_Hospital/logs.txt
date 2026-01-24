@@ -1,0 +1,57 @@
+32026-01-22T00:16:03.382755 - Sistema iniciado - Dia 1
+2026-01-22T00:20:38.073280600 - Sistema iniciado - Dia 1
+2026-01-22T00:21:38.620188100 - Sistema iniciado - Dia 1
+2026-01-22T00:25:50.218163400 - Sistema iniciado - Dia 1
+2026-01-22T00:26:31.277677700 - Sistema iniciado - Dia 1
+2026-01-22T00:26:41.827175600 - Sistema iniciado - Dia 1
+2026-01-22T00:33:19.991171100 - Sistema iniciado - Dia 1
+2026-01-22T00:33:54.479577600 - Sistema iniciado - Dia 1
+2026-01-22T00:40:25.230630700 - Sistema iniciado - Dia 1
+2026-01-22T00:42:18.370667 - Paciente registado: 0 - Urgência: Média
+2026-01-22T00:43:56.171188200 - Dados guardados com sucesso ao encerrar (Dia 1)
+2026-01-22T00:44:01.440543500 - Sistema iniciado - Dia 1
+2026-01-22T00:59:35.239196800 - Sistema iniciado - Dia 1
+2026-01-22T01:03:03.956904900 - Paciente registado: teste um - Urgência: Média
+2026-01-22T01:04:12.688694400 - Paciente registado: teste 2 - Urgência: Média
+2026-01-22T01:04:53.644767300 - Paciente registado: teste3 - Urgência: Baixa
+2026-01-22T01:05:36.528812300 - Tempo avançado para UT: 2
+2026-01-22T01:06:43.102626400 - Tempo avançado para UT: 3
+2026-01-22T01:06:53.776161100 - Agravamento: teste um -> Urgente
+2026-01-22T01:06:53.776161100 - Agravamento: teste 2 -> Urgente
+2026-01-22T01:06:53.777160800 - Agravamento: teste3 -> Média
+2026-01-22T01:06:53.777160800 - Tempo avançado para UT: 4
+2026-01-22T01:22:35.129468600 - Sistema iniciado - Dia 1
+2026-01-22T01:23:03.818092 - Paciente registado: 1 - Urgência: Média
+2026-01-22T01:23:26.460236900 - Paciente registado: 2 - Urgência: Baixa
+2026-01-22T01:23:41.528512 - Tempo avançado para UT: 2
+2026-01-22T01:23:56.154811200 - Tempo avançado para UT: 3
+2026-01-22T01:23:59.361532100 - Agravamento: 1 -> Urgente
+2026-01-22T01:23:59.361532100 - Agravamento: 2 -> Média
+2026-01-22T01:23:59.362926200 - Tempo avançado para UT: 4
+2026-01-22T01:28:56.563801100 - Sistema iniciado - Dia 1
+2026-01-22T01:29:07.629274900 - Tempo avançado para UT: 2
+2026-01-22T01:29:32.898147300 - Paciente registado: 4 - Urgência: Média
+2026-01-22T01:29:45.291666500 - Tempo avançado para UT: 3
+2026-01-22T01:29:47.907097100 - Tempo avançado para UT: 4
+2026-01-22T01:46:02.573193600 - Sistema iniciado - Dia 1
+2026-01-22T01:46:16.201055700 - Paciente registado: yes - Urgência: Média
+2026-01-22T01:47:08.717049400 - Sistema iniciado - Dia 1
+2026-01-23T20:58:40.087015400 - Sistema iniciado - Dia 1
+2026-01-23T20:59:38.854256900 - Paciente registado: vrlh - Urgência: Média
+2026-01-23T21:01:22.585460400 - Paciente registado: crlh1 - Urgência: Média
+2026-01-23T21:03:46.174908300 - Histórico: Consulta terminada - crlh1
+2026-01-24T14:31:22.359328800 - Sistema iniciado - Dia 1
+2026-01-24T14:36:10.763642 - Sistema iniciado - Dia 1
+2026-01-24T14:36:49.911305800 - Paciente registado: teste1 - Urgência: Média
+2026-01-24T14:39:37.435020400 - Paciente registado: teste ver de passsa para card - Urgência: Baixa
+2026-01-24T14:41:39.674351400 - Paciente registado: test prioridade - Urgência: Baixa
+2026-01-24T14:42:00.506515900 - Paciente registado: teste prioridade verde - Urgência: Baixa
+2026-01-24T15:24:54.899696900 - Sistema iniciado - Dia 1
+2026-01-24T15:25:24.993250400 - Paciente registado: teste - Urgência: Média
+2026-01-24T15:26:09.241204100 - Paciente registado: teste card - Urgência: Baixa
+2026-01-24T15:56:41.939305600 - Sistema iniciado - Dia 1
+2026-01-24T17:05:33.118936400 - Paciente registado: teste - Urgência: Urgente
+2026-01-24T17:06:24.974122 - Paciente registado: teste - Urgência: Urgente
+2026-01-24T17:07:20.263332900 - Paciente registado: teste orto - Urgência: Urgente
+2026-01-24T17:09:46.546994700 - Paciente registado: teste 2 - Urgência: Média
+2026-01-24T17:10:24.977865300 - Paciente registado: teste 3 - Urgência: Baixa
