@@ -32,7 +32,7 @@ public class GestaoHospital {
         medicos = new Medico[100];
         pacientes = new Paciente[200];
         consultas = new Consulta[100];
-        sintomas = new Sintoma[50];
+        sintomas = new Sintoma[100];
         especialidades = new Especialidade[20];
 
         totalMedicos = 0;
