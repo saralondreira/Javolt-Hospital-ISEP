@@ -223,9 +223,9 @@ public class InputsAuxiliares {
         int direita = espacos - esquerda;
 
         System.out.print("|");
-        for (int i = 0; i < esquerda; i++) System.out.print(" ");
+        for (int i = 0; i <= esquerda; i++) System.out.print(" ");
         System.out.print(titulo.toUpperCase());
-        for (int i = 0; i < direita; i++) System.out.print(" ");
+        for (int i = 0; i <= direita; i++) System.out.print(" ");
         System.out.println("|");
 
         imprimirLinha();

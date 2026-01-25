@@ -17,13 +17,16 @@ public class Menu {
 
     // ================= MENU PRINCIPAL =================
     public void start() {
+        InputsAuxiliares.pausar();
         InputsAuxiliares.limparTela();
         InputsAuxiliares.imprimirCabecalho("SISTEMA DE GESTÃO HOSPITALAR JAVOLT");
-        System.out.println("|    Bem-vindo ao sistema de urgências      |");
+        System.out.println("|         Bem-vindo ao sistema de urgências        |");
         InputsAuxiliares.imprimirLinha();
-        System.out.println("|   Desenvolvido por: Levi, Sara,          |");
-        System.out.println("|          Leonardo, Micael                |");
+        System.out.println("|         Desenvolvido por: Levi, Sara,            |");
+        System.out.println("|                 Leonardo, Micael                 |");
         InputsAuxiliares.imprimirLinha();
+
+        InputsAuxiliares.pausar();
 
         int opcao;
         do {
@@ -35,24 +38,34 @@ public class Menu {
                 case 3 -> menuConfiguracoes();
                 case 4 -> menuGestaoDados(); // NOVO: Menu de gestão CRUD
                 case 0 -> {
-                    System.out.println("\n A guardar dados...");
-                    gestaoHospital.guardarDados();
-                    System.out.println("  Obrigado por utilizar o sistema Javolt Hospital.");
-                    System.out.println("   A encerrar...");
+                    if (!InputsAuxiliares.confirmar("Deseja guardar as alterações antes de sair?")) {
+                        opcao = -1;
+                        System.out.println(">> Saída cancelada. A voltar ao menu...");
+                    } else {
+                        if (InputsAuxiliares.confirmar("Deseja guardar as alterações antes de sair?")) {
+                            System.out.println("\n A guardar dados...");
+                            gestaoHospital.guardarDados();
+                        } else {
+                            System.out.println("\n A sair sem guardar alterações...");
+                        }
+                        System.out.println("  Obrigado por utilizar o sistema Javolt Hospital.");
+                        System.out.println("   A encerrar...");
+                    }
                 }
                 default -> InputsAuxiliares.imprimirErro("Opção inválida.");
             }
-        } while (opcao != 0);
+        }
+        while (opcao != 0);
     }
 
     private int menuPrincipal() {
         InputsAuxiliares.limparTela();
         InputsAuxiliares.imprimirCabecalho("MENU PRINCIPAL");
-        System.out.println("|   1 - Gestão do Hospital                |");
-        System.out.println("|   2 - Estatísticas                      |");
-        System.out.println("|   3 - Configurações                     |");
-        System.out.println("|   4 - Gestão de Dados                   |");
-        System.out.println("|   0 - Sair                              |");
+        System.out.println("|   1 - Gestão do Hospital                         |");
+        System.out.println("|   2 - Estatísticas                               |");
+        System.out.println("|   3 - Configurações                              |");
+        System.out.println("|   4 - Gestão de Dados                            |");
+        System.out.println("|   0 - Sair                                       |");
         InputsAuxiliares.imprimirLinha();
         return InputsAuxiliares.lerInteiroIntervalo("Opção: ", 0, 4);
     }
@@ -63,12 +76,12 @@ public class Menu {
         do {
             InputsAuxiliares.limparTela();
             InputsAuxiliares.imprimirCabecalho("GESTÃO DO HOSPITAL");
-            System.out.println("1 - Registar paciente (Triagem)");
-            System.out.println("2 - Avançar tempo (1 Unidade)");
-            System.out.println("3 - Listar médicos");
-            System.out.println("4 - Listar pacientes");
-            System.out.println("5 - Listar consultas em curso");
-            System.out.println("0 - Voltar");
+            System.out.println("|   1 - Registar paciente (Triagem)                |");
+            System.out.println("|   2 - Avançar tempo (1 Unidade)                  |");
+            System.out.println("|   3 - Listar médicos                             |");
+            System.out.println("|   4 - Listar pacientes                           |");
+            System.out.println("|   5 - Listar consultas em curso                  |");
+            System.out.println("|   0 - Voltar                                     |");
             InputsAuxiliares.imprimirLinha();
 
             opcao = InputsAuxiliares.lerInteiroIntervalo("Opção: ", 0, 5);
@@ -109,11 +122,11 @@ public class Menu {
         do {
             InputsAuxiliares.limparTela();
             InputsAuxiliares.imprimirCabecalho("ESTATÍSTICAS");
-            System.out.println("1 - Média de pacientes por dia");
-            System.out.println("2 - Tabela de salários");
-            System.out.println("3 - Top 3 especialidades");
-            System.out.println("4 - Utentes por sintoma");
-            System.out.println("0 - Voltar");
+            System.out.println("|   1 - Média de pacientes por dia                 |");
+            System.out.println("|   2 - Tabela de salários                         |");
+            System.out.println("|   3 - Top 3 especialidades                       |");
+            System.out.println("|   4 - Utentes por sintoma                        |");
+            System.out.println("|   0 - Voltar                                     |");
             InputsAuxiliares.imprimirLinha();
 
             opcao = InputsAuxiliares.lerInteiroIntervalo("Opção: ", 0, 4);
@@ -137,11 +150,11 @@ public class Menu {
         do {
             InputsAuxiliares.limparTela();
             InputsAuxiliares.imprimirCabecalho("CONFIGURAÇÕES");
-            System.out.println("1 - Alterar caminho ficheiros");
-            System.out.println("2 - Alterar separador");
-            System.out.println("3 - Alterar tempos de consulta");
-            System.out.println("4 - Ver configuração atual");
-            System.out.println("0 - Voltar");
+            System.out.println("|   1 - Alterar caminho ficheiros                  |");
+            System.out.println("|   2 - Alterar separador                          |");
+            System.out.println("|   3 - Alterar tempos de consulta                 |");
+            System.out.println("|   4 - Ver configuração atual                     |");
+            System.out.println("|   0 - Voltar                                     |");
             InputsAuxiliares.imprimirLinha();
 
             opcao = InputsAuxiliares.lerInteiroIntervalo("Opção: ", 0, 4);
@@ -169,10 +182,10 @@ public class Menu {
         do {
             InputsAuxiliares.limparTela();
             InputsAuxiliares.imprimirCabecalho("GESTÃO DE DADOS");
-            System.out.println("1 - Gestão de Médicos");
-            System.out.println("2 - Gestão de Especialidades");
-            System.out.println("3 - Gestão de Sintomas");
-            System.out.println("0 - Voltar");
+            System.out.println("|   1 - Gestão de Médicos                          |");
+            System.out.println("|   2 - Gestão de Especialidades                   |");
+            System.out.println("|   3 - Gestão de Sintomas                         |");
+            System.out.println("|   0 - Voltar                                     |");
             InputsAuxiliares.imprimirLinha();
 
             opcao = InputsAuxiliares.lerInteiroIntervalo("Opção: ", 0, 3);
