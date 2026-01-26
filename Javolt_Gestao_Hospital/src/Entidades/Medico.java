@@ -1,6 +1,6 @@
 package Entidades;
 
-public class Medico {
+public class Medico extends Pessoa {
     private String nome;
     private String especialidade;
     private int horaEntrada;
@@ -11,9 +11,10 @@ public class Medico {
     private int horasTrabalhoContinuo = 0; // Para controlo de descanso
     private int tempoDescandoRestante = 0;
 
-    public Medico() {}
+    public Medico() {super();}
 
     public Medico(String nome, String especialidade, int horaEntrada, int horaSaida, double valorHora) {
+        super(nome);
         this.nome = nome;
         this.especialidade = especialidade;
         this.horaEntrada = horaEntrada;
@@ -22,7 +23,6 @@ public class Medico {
     }
 
     // GETTERS
-    public String getNome() { return nome; }
     public String getEspecialidade() { return especialidade; }
     public int getHoraEntrada() { return horaEntrada; }
     public int getHoraSaida() { return horaSaida; }
@@ -33,7 +33,6 @@ public class Medico {
     public int getTempoDescandoRestante() { return tempoDescandoRestante; }
 
     // SETTERS
-    public void setNome(String nome) { this.nome = nome; }
     public void setEspecialidade(String especialidade) { this.especialidade = especialidade; }
     public void setHoraEntrada(int horaEntrada) { this.horaEntrada = horaEntrada; }
     public void setHoraSaida(int horaSaida) { this.horaSaida = horaSaida; }
@@ -84,7 +83,7 @@ public class Medico {
 
     @Override
     public String toString() {
-        return "Médico: " + nome +
+        return "Médico: " + getNome() +
                 " | Esp: " + especialidade +
                 " | Horário: " + horaEntrada + "h - " + horaSaida + "h" +
                 " | Disponível: " + (disponivel ? "Sim" : "Não") +

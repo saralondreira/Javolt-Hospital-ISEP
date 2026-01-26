@@ -1,8 +1,7 @@
 package Entidades;
 
 
-public class Paciente {
-    private String nome;
+public class Paciente extends Pessoa {
     private Sintoma[] sintomas;
     private int totalSintomas;
     private String nivelUrgencia;
@@ -11,7 +10,7 @@ public class Paciente {
     private boolean emAtendimento;
 
     public Paciente(String nome, int maxSintomas) {
-        this.nome = nome;
+        super(nome);
         this.sintomas = new Sintoma[maxSintomas];
         this.totalSintomas = 0;
         this.tempoEspera = 0;
@@ -36,10 +35,6 @@ public class Paciente {
     }
 
     // GETTERS
-    public String getNome() {
-        return nome;
-    }
-
     public Sintoma[] getSintomas() {
         return sintomas;
     }
@@ -119,33 +114,11 @@ public class Paciente {
     @Override
     public String toString() {
         return String.format("%-20s %-10s %-20s %-10s Tempo: %d",
-                nome, nivelUrgencia,
+                getNome(), nivelUrgencia,
                 especialidadeDesejada,
                 (emAtendimento ? "Em Atend." : "Espera"),
                 tempoEspera);
     }
-
-    //calcular nivel de urgencia
-
-    /*public String calcularNivelUrgencia() {
-        boolean temMedia = false;
-
-        for (int i = 0; i < totalSintomas; i++) {
-            String urg = sintomas[i].getNivelUrgencia();
-
-            if (urg.equalsIgnoreCase("Vermelha")) {
-                nivelUrgencia = "Urgente";
-                return nivelUrgencia;
-            }
-            if (urg.equalsIgnoreCase("Laranja")) {
-                temMedia = true;
-            }
-        }
-
-        nivelUrgencia = temMedia ? "Média" : "Baixa";
-        return nivelUrgencia;
-    }*/
-
 
     // Urgencia passa a numeros no GestaoTurnos
     public void setNivelUrgencia(int nivelNumerico) {
