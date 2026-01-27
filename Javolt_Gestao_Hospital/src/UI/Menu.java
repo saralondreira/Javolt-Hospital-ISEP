@@ -49,7 +49,6 @@ public class Menu {
 
                     System.out.println("  Obrigado por utilizar o sistema Javolt Hospital.");
                     System.out.println("   A encerrar...");
-                    // opcao é 0, então o do/while termina
                 }
                 default -> InputsAuxiliares.imprimirErro("Opção inválida.");
             }
