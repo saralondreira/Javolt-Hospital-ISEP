@@ -266,7 +266,8 @@ public class GestaoHospital {
                     m.getNome(),
                     m.getEspecialidade(),
                     horario,
-                    estadoStr, // Mostra o estado calculado
+                    estadoStr,
+                    m.getHorasTrabalhadas()); // ADICIONA ISTO// Mostra o estado calculado
         }
         System.out.println("=".repeat(80));
     }
@@ -327,15 +328,19 @@ public class GestaoHospital {
     }
 
     // ================== GESTÃO DE PACIENTES E TRIAGEM ==================
+    // CÓDIGO CORRIGIDO
     public boolean adicionarPaciente(Paciente p) {
+        // 1. Adicionar à Fila de Espera (Pacientes atuais)
         if (totalPacientes >= pacientes.length) {
             return false;
         }
         pacientes[totalPacientes++] = p;
 
-        if (totalPacientes >= historicoPacientes.length) {
-            historicoPacientes[totalPacientes++] = p;
+        // 2. Adicionar ao Histórico (Para estatísticas)
+        if (totalHistorico < historicoPacientes.length) {
+            historicoPacientes[totalHistorico++] = p; // Usa e incrementa totalHistorico
         }
+
         return true;
     }
 
