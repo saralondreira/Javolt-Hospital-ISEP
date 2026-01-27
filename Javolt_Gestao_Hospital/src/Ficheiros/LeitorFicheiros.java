@@ -147,7 +147,7 @@ public class LeitorFicheiros {
                     lista[i++] = p;
                 }
             }
-        } catch (Exception e) { // <--- USAMOS EXCEPTION EM VEZ DE IOEXCEPTION
+        } catch (Exception e) {
             System.out.println(" Erro ao ler histórico: " + e.getMessage());
         }
         return lista;

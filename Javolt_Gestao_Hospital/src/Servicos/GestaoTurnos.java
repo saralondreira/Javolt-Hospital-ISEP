@@ -161,7 +161,7 @@ public class GestaoTurnos {
 
     private int encontrarMelhorPaciente(Paciente[] fila, String especialidadeMedico) {
 
-        // 1️⃣ Procurar URGENTES
+        //  Procurar URGENTES
         for (int i = 0; i < fila.length; i++) {
             Paciente p = fila[i];
             if (p == null) continue;
@@ -175,7 +175,7 @@ public class GestaoTurnos {
             }
         }
 
-        // 2️⃣ Procurar MÉDIOS
+        // 2Procurar MÉDIOS
         for (int i = 0; i < fila.length; i++) {
             Paciente p = fila[i];
             if (p == null) continue;
@@ -189,7 +189,7 @@ public class GestaoTurnos {
             }
         }
 
-        // 3️⃣ Procurar BAIXOS
+        //  Procurar BAIXOS
         for (int i = 0; i < fila.length; i++) {
             Paciente p = fila[i];
             if (p == null) continue;
