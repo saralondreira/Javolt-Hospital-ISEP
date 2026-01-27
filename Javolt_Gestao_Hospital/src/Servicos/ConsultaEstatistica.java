@@ -30,8 +30,6 @@ public class ConsultaEstatistica {
        SALÁRIO POR MÉDICO
        ============================== */
     public static double calcularSalarioMedico(Medico medico, int dias) {
-        // Considera que as horas trabalhadas são acumuladas
-        // Salário = valor hora * horas trabalhadas
         return medico.getHorasTrabalhadas() * medico.getValorHora();
     }
 
@@ -78,7 +76,7 @@ public class ConsultaEstatistica {
             for (int j = 0; j < p.getTotalSintomas(); j++) {
                 if (sintomasPaciente[j].getNome().equalsIgnoreCase(sintomaNome)) {
                     contador++;
-                    break; // Paciente tem o sintoma, contar apenas uma vez
+                    break;
                 }
             }
         }
@@ -98,7 +96,6 @@ public class ConsultaEstatistica {
             Sintoma s = sintomas[i];
             int count = contarUtentesComSintoma(s.getNome(), pacientes, totalPacientes);
 
-            // Calcular percentagem
             double percent = totalPacientes > 0 ? (count * 100.0) / totalPacientes : 0;
 
             System.out.printf("%-25s %-15s %-10d (%.1f%%)%n",
@@ -122,11 +119,9 @@ public class ConsultaEstatistica {
             return;
         }
 
-        // Array para contagem
         int[] contadores = new int[totalEspecialidades];
         int totalPacientesComEspecialidade = 0;
 
-        // Contar pacientes por especialidade
         for (int i = 0; i < totalPacientes; i++) {
             String espPaciente = pacientes[i].getEspecialidadeDesejada();
 
@@ -141,26 +136,21 @@ public class ConsultaEstatistica {
             }
         }
 
-        // Criar arrays para ordenação
         Especialidade[] espOrdenadas = new Especialidade[totalEspecialidades];
         int[] contadoresOrdenados = new int[totalEspecialidades];
 
-        // Copiar arrays
         for (int i = 0; i < totalEspecialidades; i++) {
             espOrdenadas[i] = especialidades[i];
             contadoresOrdenados[i] = contadores[i];
         }
 
-        // Ordenar por contagem (bubble sort - simples)
         for (int i = 0; i < totalEspecialidades - 1; i++) {
             for (int j = 0; j < totalEspecialidades - i - 1; j++) {
                 if (contadoresOrdenados[j] < contadoresOrdenados[j + 1]) {
-                    // Trocar contadores
                     int tempCont = contadoresOrdenados[j];
                     contadoresOrdenados[j] = contadoresOrdenados[j + 1];
                     contadoresOrdenados[j + 1] = tempCont;
 
-                    // Trocar especialidades
                     Especialidade tempEsp = espOrdenadas[j];
                     espOrdenadas[j] = espOrdenadas[j + 1];
                     espOrdenadas[j + 1] = tempEsp;
@@ -184,7 +174,6 @@ public class ConsultaEstatistica {
                     percentagem);
         }
 
-        // Mostrar estatísticas adicionais
         System.out.println("-".repeat(50));
         System.out.printf("Total pacientes analisados: %d%n", totalPacientes);
         System.out.printf("Pacientes com especialidade definida: %d%n", totalPacientesComEspecialidade);

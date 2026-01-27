@@ -3,18 +3,17 @@ package Servicos;
 import Entidades.Consulta;
 import Entidades.Medico;
 import Entidades.Paciente;
+import UI.InputsAuxiliares;
 
 public class GestaoTurnos {
 
     private GestaoHospital gestaoHospital;
 
-    // Variáveis de Controlo de Tempo
     private int unidadeTempoAtual;
     private int diasDecorridos;
 
-    // Array para gerir as consultas
     private Consulta[] consultasAtivas;
-    private final int MAX_CONSULTAS_SIMULTANEAS = 100;
+    private static final int MAX_CONSULTAS_SIMULTANEAS = 100;
 
     public GestaoTurnos(GestaoHospital gh) {
         this.gestaoHospital = gh;
@@ -37,11 +36,10 @@ public class GestaoTurnos {
                 m.decrementarDescanso();
             }
         }
-        System.out.println("\n--------------------------------------------------");
+        InputsAuxiliares.imprimirLinha();
         System.out.println(" RELOGIO AVANCOU: " + unidadeTempoAtual + "h -> " + (unidadeTempoAtual + 1) + "h (Dia " + diasDecorridos + ")");
-        System.out.println("--------------------------------------------------");
+        InputsAuxiliares.imprimirLinha();
 
-        // 1. Avançar o relógio
         unidadeTempoAtual++;
         if (unidadeTempoAtual > 24) {
             unidadeTempoAtual = 1;
@@ -49,16 +47,12 @@ public class GestaoTurnos {
             System.out.println("UM NOVO DIA COMECOU! (Dia " + diasDecorridos + ")");
         }
 
-        // 2. Processar consultas
         processarConsultasAtivas();
 
-        // 3. Verificar cansaço
         verificarDescansoMedicos();
 
-        // 4. Atualizar fila de espera
         atualizarFilaDeEspera();
 
-        // 5. Atribuir pacientes
         atribuirPacientesAutomaticamente();
     }
 
@@ -88,14 +82,17 @@ public class GestaoTurnos {
     private void verificarDescansoMedicos() {
         Medico[] medicos = gestaoHospital.getListaMedicos();
 
+        int limiteHoras = gestaoHospital.getConfiguracao().getHorasTrabalhoParaDescanso();
+        int tempoDescanso = gestaoHospital.getConfiguracao().getUnidadesDescanso();
+
         for (Medico m : medicos) {
             if (m == null) continue;
 
             if (m.isDisponivel()) {
-                if (m.getHorasTrabalhoContinuo() >= 5) {
+                if (m.precisaDescanso(limiteHoras)) {
                     System.out.println("PAUSA OBRIGATORIA: Dr. " + m.getNome() + " trabalhou 5h seguidas.");
                     m.resetarHorasContinuo();
-                    m.definirDescanso(1);
+                    m.definirDescanso(tempoDescanso);
                 }
             }
         }
@@ -114,7 +111,6 @@ public class GestaoTurnos {
 
             int nivel = p.getNivelUrgenciaNumerico();
 
-            // Regras de Escala
             if (nivel == 1 && espera >= 3) {
                 p.setNivelUrgencia(2);
                 p.setTempoEspera(0);
@@ -149,7 +145,6 @@ public class GestaoTurnos {
             if (indexPaciente != -1) {
                 Paciente p = fila[indexPaciente];
 
-                // calcular a duraçao
                 int duracao = p.getNivelUrgenciaNumerico();
                 if (duracao < 1) duracao = 1;
 
@@ -162,7 +157,6 @@ public class GestaoTurnos {
     private int encontrarMelhorPaciente(Paciente[] fila, String especialidadeMedico) {
         String codigoMedico = especialidadeMedico.trim();
 
-        // 1. PRIMEIRO: Procurar URGENTES
         for (int i = 0; i < fila.length; i++) {
             Paciente p = fila[i];
             if (p == null || p.isEmAtendimento()) continue;
@@ -170,17 +164,15 @@ public class GestaoTurnos {
 
             String espPaciente = p.getEspecialidadeDesejada().trim();
 
-            // Verifica se é Match Exato OU se é Clinica Geral (que entra em qualquer lado)
             boolean match = espPaciente.equalsIgnoreCase(codigoMedico) ||
                     espPaciente.equalsIgnoreCase("Clinica Geral") ||
                     espPaciente.equalsIgnoreCase("Clínica Geral");
 
             if (match && p.getNivelUrgencia().equalsIgnoreCase("Urgente")) {
-                return i; // Encontrou um urgente, devolve logo!
+                return i;
             }
         }
 
-        // 2. SEGUNDO: Procurar MÉDIOS
         for (int i = 0; i < fila.length; i++) {
             Paciente p = fila[i];
             if (p == null || p.isEmAtendimento()) continue;
@@ -197,7 +189,6 @@ public class GestaoTurnos {
             }
         }
 
-        // 3. TERCEIRO: Procurar BAIXOS
         for (int i = 0; i < fila.length; i++) {
             Paciente p = fila[i];
             if (p == null || p.isEmAtendimento()) continue;
@@ -214,7 +205,7 @@ public class GestaoTurnos {
             }
         }
 
-        return -1; // Ninguém encontrado
+        return -1;
     }
 
 
@@ -245,7 +236,6 @@ public class GestaoTurnos {
         for (Consulta c : consultasAtivas) {
             if (c != null) {
                 haConsultas = true;
-                // Cálculo da barra de progresso simples
                 int tempoPassado = c.getTempoTotal() - c.getTempoRestante();
                 System.out.printf("Dr. %-15s -> Paciente: %-15s | Restam: %d UTs | Progresso: [%d/%d]%n",
                         c.getMedico().getNome(),
@@ -259,6 +249,6 @@ public class GestaoTurnos {
         if (!haConsultas) {
             System.out.println(">> Não existem consultas a decorrer neste momento.");
         }
-        System.out.println("----------------------------------------------------------------");
+        InputsAuxiliares.imprimirLinha();
     }
 }

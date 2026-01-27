@@ -1,5 +1,5 @@
 Configurações do Sistema:
-Caminho dos ficheiros: Recursos\/
+Caminho dos ficheiros: Recursos/
 Separador: ;
 Tempo consulta Baixa: 1 UT
 Tempo consulta Média: 2 UT

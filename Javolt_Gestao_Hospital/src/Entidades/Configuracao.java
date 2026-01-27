@@ -13,7 +13,6 @@ public class Configuracao {
     private int tempoUrgenteParaSaida;
     private String password;
 
-    // CONSTANTES DO ENUNCIADO
     public static final char SEPARADOR_DEFAULT = ';';
     public static final String CAMINHO_DEFAULT = "Recursos/";
     public static final String PASSWORD_DEFAULT = "javolt";
@@ -52,7 +51,6 @@ public class Configuracao {
     public int getTempoMediaParaUrgente() { return tempoMediaParaUrgente; }
     public int getTempoUrgenteParaSaida() { return tempoUrgenteParaSaida; }
 
-    // SETTERS COM VALIDAÇÃO (do colega)
     public void setCaminhoFicheiros(String caminhoFicheiros) {
         if (caminhoFicheiros == null || caminhoFicheiros.trim().isEmpty()) {
             throw new IllegalArgumentException("Caminho não pode ser vazio.");
@@ -85,7 +83,6 @@ public class Configuracao {
         this.tempoConsultaUrgente = tempoConsultaUrgente;
     }
 
-    // PASSWORD (do colega - mais completo)
     public boolean verificarPassword(String tentativa) {
         return this.password != null && this.password.equals(tentativa);
     }

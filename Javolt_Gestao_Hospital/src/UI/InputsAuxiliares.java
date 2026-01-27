@@ -40,7 +40,6 @@ public class InputsAuxiliares {
             System.out.print(msg);
             String input = scanner.nextLine();
 
-            // Verifica se é "0" para cancelamento COM confirmação
             if (input.trim().equals("0")) {
                 System.out.print("\n>> Deseja cancelar a operação? (S/N): ");
                 String confirmacao = scanner.nextLine();
@@ -48,7 +47,7 @@ public class InputsAuxiliares {
                     throw new OperacaoCanceladaException();
                 }
                 imprimirAviso("Operação retomada. Continue a inserir dados.");
-                continue; // Continua pedindo input
+                continue;
             }
 
             if (input.trim().isEmpty()) {
@@ -72,7 +71,7 @@ public class InputsAuxiliares {
 
             if (input.equals("0")) {
                 if (confirmar("Deseja cancelar a operação?")) {
-                    return Integer.MIN_VALUE; // Valor especial para cancelamento
+                    return Integer.MIN_VALUE;
                 }
                 continue;
             }
@@ -135,7 +134,7 @@ public class InputsAuxiliares {
 
             if (input.equals("0")) {
                 if (confirmar("Deseja cancelar a operação?")) {
-                    return Double.MIN_VALUE; // Valor especial para cancelamento
+                    return Double.MIN_VALUE;
                 }
                 continue;
             }
@@ -168,7 +167,6 @@ public class InputsAuxiliares {
             }
 
             try {
-                // Substitui vírgula por ponto para evitar erros de locale
                 return Double.parseDouble(input.trim().replace(",", "."));
             } catch (NumberFormatException e) {
                 imprimirErro("Valor inválido. Insira um número decimal (ex: 10.5).");
