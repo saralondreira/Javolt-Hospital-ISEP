@@ -124,16 +124,13 @@ public class LeitorFicheiros {
 
             while ((linha = br.readLine()) != null) {
                 String[] partes = linha.split(separador);
-                // Formato: Nome;Nivel;Especialidade;TempoEspera
                 if (partes.length >= 4) {
                     String nome = partes[0];
                     String nivel = partes[1];
                     String especialidade = partes[2];
 
-                    // Converte texto para número (dentro do try/catch geral)
                     int tempoEspera = Integer.parseInt(partes[3]);
 
-                    // Recriar o paciente
                     Paciente p = new Paciente(nome, 5);
                     p.setNivelUrgencia(nivel);
 
@@ -142,7 +139,7 @@ public class LeitorFicheiros {
                     }
 
                     p.setTempoEspera(tempoEspera);
-                    p.setEmAtendimento(false); // Histórico não está em atendimento
+                    p.setEmAtendimento(false);
 
                     lista[i++] = p;
                 }

@@ -80,8 +80,6 @@ public class Paciente extends Pessoa {
         tempoEspera++;
     }
 
-    // getter para o gestorTurnos
-    // 1=Baixa/Verde, 2=Média/Laranja, 3=Urgente/Vermelho
     public int getNivelUrgenciaNumerico() {
         if (this.nivelUrgencia == null) return 1;
 
@@ -94,7 +92,7 @@ public class Paciente extends Pessoa {
                 this.nivelUrgencia.equalsIgnoreCase("Laranja")) {
             return 2;
         }
-        return 1; // Baixa
+        return 1;
     }
 
     public void atualizarUrgenciaPorNumero(int nivelNumerico) {
@@ -120,7 +118,6 @@ public class Paciente extends Pessoa {
                 tempoEspera);
     }
 
-    // Urgencia passa a numeros no GestaoTurnos
     public void setNivelUrgencia(int nivelNumerico) {
         switch (nivelNumerico) {
             case 3:
@@ -135,24 +132,20 @@ public class Paciente extends Pessoa {
         }
     }
 
-    // Calcula urgência e especialidade com base nos sintomas (TRIAGEM)
     public void calcularUrgenciaEEspecialidade() {
 
         boolean temMedia = false;
 
-        // 1) PRIORIDADE ABSOLUTA: sintomas vermelhos
         for (int i = 0; i < totalSintomas; i++) {
             Sintoma s = sintomas[i];
 
             if (s.getNivelUrgencia().equalsIgnoreCase("Vermelha")) {
                 this.nivelUrgencia = "Urgente";
 
-                // se o sintoma tiver especialidade associada
                 if (s.getEspecialidade() != null) {
                     this.especialidadeDesejada = s.getEspecialidade().getNome();
                 }
-
-                return; // ignora os restantes sintomas
+                return;
             }
 
             if (s.getNivelUrgencia().equalsIgnoreCase("Laranja")) {
@@ -160,14 +153,12 @@ public class Paciente extends Pessoa {
             }
         }
 
-        // 2) Definir urgência se não houve vermelhos
         if (temMedia) {
             this.nivelUrgencia = "Média";
         } else {
             this.nivelUrgencia = "Baixa";
         }
 
-        // 3) Calcular especialidade por contagem (arrays apenas)
         String[] especialidades = new String[totalSintomas];
         int[] contagem = new int[totalSintomas];
         int total = 0;

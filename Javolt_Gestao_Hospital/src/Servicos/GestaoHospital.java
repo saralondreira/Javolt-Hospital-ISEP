@@ -13,7 +13,6 @@ public class GestaoHospital {
     private Paciente[] pacientes;
     private Paciente[] historicoPacientes;
     private GestaoTurnos gestorDeTurnos;
-    private Consulta[] consultas;
     private Sintoma[] sintomas;
     private Especialidade[] especialidades;
 
@@ -23,7 +22,6 @@ public class GestaoHospital {
 
     private int totalMedicos;
     private int totalPacientes;
-    private int totalConsultas;
     private int totalSintomas;
     private int totalEspecialidades;
     private int totalHistorico;
@@ -35,13 +33,11 @@ public class GestaoHospital {
         medicos = new Medico[100];
         pacientes = new Paciente[200];
         historicoPacientes = new Paciente[1000];
-        consultas = new Consulta[100];
         sintomas = new Sintoma[100];
         especialidades = new Especialidade[20];
 
         totalMedicos = 0;
         totalPacientes = 0;
-        totalConsultas = 0;
         totalSintomas = 0;
         totalEspecialidades = 0;
         totalHistorico = 0;
@@ -52,7 +48,7 @@ public class GestaoHospital {
         gestor = new GestorFicheiros(String.valueOf(configuracao.getSeparador()));
         this.gestorDeTurnos = new GestaoTurnos(this);
         carregarDadosIniciais();
-        gestor.escreverLog("logs.txt", "Sistema iniciado - Dia " + +gestorDeTurnos.getDiasDecorridos());
+        gestor.escreverLog("logs.txt", "Sistema iniciado - Dia " + gestorDeTurnos.getDiasDecorridos());
     }
 
     // ================== CARREGAMENTO DE DADOS ==================
@@ -261,13 +257,13 @@ public class GestaoHospital {
             boolean dentroDoHorario = horaAtual >= m.getHoraEntrada() && horaAtual < m.getHoraSaida();
 
             if (!dentroDoHorario) {
-                estadoStr = "Fora de Turno"; // Está fora do horário
-            } else if (m.estaDeFolga()) { // <-- Se já implementaste o descanso que te mandei antes
+                estadoStr = "Fora de Turno";
+            } else if (m.estaDeFolga()) {
                 estadoStr = "Em Descanso";
             } else if (!m.isDisponivel()) {
-                estadoStr = "Ocupado"; // Está numa consulta
+                estadoStr = "Ocupado";
             } else {
-                estadoStr = "Disponível"; // Está no turno E livre
+                estadoStr = "Disponível";
             }
 
             System.out.printf("%-20s %-15s %-15s %-15s %.1f%n",
@@ -275,22 +271,9 @@ public class GestaoHospital {
                     m.getEspecialidade(),
                     horario,
                     estadoStr,
-                    m.getHorasTrabalhadas()); // ADICIONA ISTO// Mostra o estado calculado
+                    m.getHorasTrabalhadas());
         }
         System.out.println("=".repeat(80));
-    }
-
-
-    public Medico procurarMedicoPorEspecialidade(String especialidade) {
-        for (int i = 0; i < totalMedicos; i++) {
-            Medico m = medicos[i];
-            if (m.getEspecialidade().equalsIgnoreCase(especialidade) &&
-                    m.isDisponivel() &&
-                    m.estaEmServico(gestorDeTurnos.getUnidadeTempoAtual())) {
-                return m;
-            }
-        }
-        return null;
     }
 
     public boolean adicionarMedico(Medico medico) {
@@ -336,15 +319,11 @@ public class GestaoHospital {
     }
 
     // ================== GESTÃO DE PACIENTES E TRIAGEM ==================
-    // CÓDIGO CORRIGIDO
     public boolean adicionarPaciente(Paciente p) {
-        // 1. Adicionar à Fila de Espera (Pacientes atuais)
         if (totalPacientes >= pacientes.length) {
             return false;
         }
         pacientes[totalPacientes++] = p;
-
-        // 2. Adicionar ao Histórico (Para estatísticas)
         if (totalHistorico < historicoPacientes.length) {
             historicoPacientes[totalHistorico++] = p;
         }
@@ -377,7 +356,6 @@ public class GestaoHospital {
         String nome = InputsAuxiliares.lerTextoNaoVazio("Nome do paciente: ");
         Paciente p = new Paciente(nome, 5);
 
-        // 1. SELECIONAR SINTOMAS COM PESQUISA
         boolean adicionarMais = true;
 
         while (adicionarMais && p.getTotalSintomas() < 5) {
@@ -387,19 +365,15 @@ public class GestaoHospital {
 
             String termo = InputsAuxiliares.lerTexto("Pesquisa: ").trim().toLowerCase();
 
-            // Array auxiliar para mapear a escolha do utilizador para o índice real do array 'sintomas'
             int[] indicesEncontrados = new int[totalSintomas];
             int qtdEncontrados = 0;
 
             System.out.println("\n--- RESULTADOS DA PESQUISA ---");
             for (int i = 0; i < totalSintomas; i++) {
-                // Se termo vazio mostra tudo, se não, filtra pelo nome
                 if (termo.isEmpty() || sintomas[i].getNome().toLowerCase().contains(termo)) {
-                    // Guarda o índice original deste sintoma
                     indicesEncontrados[qtdEncontrados] = i;
                     qtdEncontrados++;
 
-                    // Mostra a opção (ex: 1. Dor de cabeça)
                     System.out.printf("%d. %s%n", qtdEncontrados, sintomas[i]);
                 }
             }
@@ -409,7 +383,7 @@ public class GestaoHospital {
                 if (!InputsAuxiliares.confirmar("Deseja tentar nova pesquisa? (N para terminar seleção)")) {
                     adicionarMais = false;
                 }
-                continue; // Volta ao início para nova pesquisa
+                continue;
             }
 
             System.out.println("0. Cancelar / Nova Pesquisa");
@@ -419,15 +393,13 @@ public class GestaoHospital {
                     "Escolha o sintoma (número): ", -1, qtdEncontrados);
 
             if (escolha == 0) {
-                continue; // Volta a pesquisar
+                continue;
             } else if (escolha == -1) {
                 adicionarMais = false; // Sai do loop
             } else {
-                // Recupera o sintoma original usando o índice mapeado
                 int indiceReal = indicesEncontrados[escolha - 1];
                 Sintoma selecionado = sintomas[indiceReal];
 
-                // Verificar se já tem o sintoma
                 boolean jaTem = p.temSintoma(selecionado.getNome());
 
                 if (!jaTem) {
@@ -441,7 +413,6 @@ public class GestaoHospital {
                     System.out.println(">> Limite de 5 sintomas atingido.");
                     adicionarMais = false;
                 } else {
-                    // Pergunta rápida se quer continuar, para agilizar
                     if (!InputsAuxiliares.confirmar("Adicionar outro sintoma?")) {
                         adicionarMais = false;
                     }
@@ -454,7 +425,6 @@ public class GestaoHospital {
             return;
         }
 
-        // 2. CALCULAR URGÊNCIA E ESPECIALIDADE (conforme enunciado)
         p.calcularUrgenciaEEspecialidade();
 
         if (p.getEspecialidadeDesejada() == null ||
@@ -463,7 +433,6 @@ public class GestaoHospital {
 
             p.setEspecialidadeDesejada("Clinica Geral");
         }
-        // 3. REGISTAR PACIENTE
         if (adicionarPaciente(p)) {
             InputsAuxiliares.imprimirSucesso("PACIENTE REGISTADO COM SUCESSO!");
             System.out.println(" Resumo da Triagem:");
@@ -482,29 +451,10 @@ public class GestaoHospital {
 
 
     // ================== GESTÃO DE CONSULTAS E TEMPO ==================
-    public boolean criarConsulta(Medico medico, Paciente paciente, int tempoConsulta) {
-        if (totalConsultas >= consultas.length) return false;
-
-        consultas[totalConsultas++] = new Consulta(medico, paciente, tempoConsulta);
-        medico.setDisponivel(false);
-        paciente.setEmAtendimento(true);
-
-        // Registrar horas trabalhadas
-        medico.adicionarHorasTrabalhadas(1);
-
-        gestor.escreverLog("logs.txt",
-                "Consulta iniciada: " + paciente.getNome() + " -> Dr. " + medico.getNome() +
-                        " (" + tempoConsulta + " UT)");
-
-        return true;
-    }
-
-    /**
+     /**
      * AVANÇAR TEMPO - conforme enunciado (24 UT por dia)
      */
     public void avancarTempo() {
-        // Classe GestaoTurnos faz o avançar o tempo
-        // tem a lógica de simulação, relógio, descanso e assim.
         if (this.gestorDeTurnos != null) {
             this.gestorDeTurnos.avancarUnidadeTempo();
         } else {
@@ -639,7 +589,6 @@ public class GestaoHospital {
         try {
             String caminho = configuracao.getCaminhoFicheiros();
 
-            // Guardar Médicos
             java.io.BufferedWriter bw = new java.io.BufferedWriter(
                     new java.io.FileWriter(caminho + "medicos.txt"));
             for (int i = 0; i < totalMedicos; i++) {
@@ -652,7 +601,6 @@ public class GestaoHospital {
             }
             bw.close();
 
-            // Guardar Pacientes (histórico)
             bw = new java.io.BufferedWriter(
                     new java.io.FileWriter(caminho + "pacientes_historico.txt"));
             for (int i = 0; i < totalHistorico; i++) { // Usar totalHistorico!
@@ -669,7 +617,6 @@ public class GestaoHospital {
             }
             bw.close();
 
-            // Guardar configuração atual
             bw = new java.io.BufferedWriter(
                     new java.io.FileWriter(caminho + "configuracao.txt"));
             bw.write(configuracao.toString());
@@ -683,7 +630,6 @@ public class GestaoHospital {
         }
     }
 
-    // ver medicos
     public Medico[] getListaMedicos() {
         return this.medicos;
     }
@@ -692,7 +638,6 @@ public class GestaoHospital {
         return this.pacientes;
     }
 
-    // remover pacientes
     public void removerPacienteDaFila(int index) {
         if (index >= 0 && index < totalPacientes) {
             for (int i = index; i < totalPacientes - 1; i++) {
@@ -702,7 +647,6 @@ public class GestaoHospital {
         }
     }
 
-    // guuuardar historico no gestorTurnos
     public void adicionarAoHistorico(Consulta c) {
         totalPacientesAtendidos++;
         if (gestor != null) {
@@ -713,4 +657,13 @@ public class GestaoHospital {
     public String getConfiguracaoTexto() {
         return configuracao.toString();
     }
+
+    public Configuracao getConfiguracao() {
+        return configuracao;
+    }
+
+    public void setConfiguracao(Configuracao configuracao) {
+        this.configuracao = configuracao;
+    }
+
 }

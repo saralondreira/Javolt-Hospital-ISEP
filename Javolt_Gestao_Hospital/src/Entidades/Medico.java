@@ -8,7 +8,7 @@ public class Medico extends Pessoa {
     private double valorHora;
     private boolean disponivel = true;
     private double horasTrabalhadas = 0;
-    private int horasTrabalhoContinuo = 0; // Para controlo de descanso
+    private int horasTrabalhoContinuo = 0;
     private int tempoDescandoRestante = 0;
 
     public Medico() {super();}
@@ -42,7 +42,6 @@ public class Medico extends Pessoa {
     public void setHorasTrabalhoContinuo(int horas) { this.horasTrabalhoContinuo = horas; }
     public void setTempoDescandoRestante(int tempo) { this.tempoDescandoRestante = tempo; }
 
-    // MÉTODOS DE NEGÓCIO
     public void adicionarHorasTrabalhadas(double horas) {
         this.horasTrabalhadas += horas;
         this.horasTrabalhoContinuo += horas;
@@ -56,7 +55,6 @@ public class Medico extends Pessoa {
         return horasTrabalhoContinuo >= limiteHoras;
     }
 
-    // Verifica se o médico está em serviço na unidade de tempo atual
     public boolean estaEmServico(int unidadeTempo) {
         return disponivel &&
                 unidadeTempo >= horaEntrada &&

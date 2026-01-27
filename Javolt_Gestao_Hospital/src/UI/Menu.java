@@ -36,7 +36,7 @@ public class Menu {
                 case 1 -> menuGestaoHospital();
                 case 2 -> menuEstatisticas();
                 case 3 -> menuConfiguracoes();
-                case 4 -> menuGestaoDados(); // NOVO: Menu de gestão CRUD
+                case 4 -> menuGestaoDados();
                 case 0 -> {
                     if (!InputsAuxiliares.confirmar("Deseja guardar as alterações antes de sair?")) {
                         opcao = -1;
