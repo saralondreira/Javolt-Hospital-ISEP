@@ -2,6 +2,7 @@ package Ficheiros;
 
 import Entidades.Medico;
 import Entidades.Especialidade;
+import Entidades.Paciente;
 import Entidades.Sintoma;
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -19,7 +20,7 @@ public class LeitorFicheiros {
         try (BufferedReader br = new BufferedReader(new FileReader(caminho))) {
             while (br.readLine() != null) total++;
         } catch (IOException e) {
-            System.out.println("⚠ Erro ao contar linhas: " + e.getMessage());
+            System.out.println(" Erro ao contar linhas: " + e.getMessage());
         }
         return total;
     }
@@ -109,6 +110,45 @@ public class LeitorFicheiros {
             }
         } catch (IOException e) {
             System.out.println(" Erro ao ler sintomas: " + e.getMessage());
+        }
+        return lista;
+    }
+
+    public Paciente[] lerHistoricoPacientes(String caminho) {
+        int total = contarLinhas(caminho);
+        Paciente[] lista = new Paciente[total];
+
+        try (BufferedReader br = new BufferedReader(new FileReader(caminho))) {
+            String linha;
+            int i = 0;
+
+            while ((linha = br.readLine()) != null) {
+                String[] partes = linha.split(separador);
+                // Formato: Nome;Nivel;Especialidade;TempoEspera
+                if (partes.length >= 4) {
+                    String nome = partes[0];
+                    String nivel = partes[1];
+                    String especialidade = partes[2];
+
+                    // Converte texto para número (dentro do try/catch geral)
+                    int tempoEspera = Integer.parseInt(partes[3]);
+
+                    // Recriar o paciente
+                    Paciente p = new Paciente(nome, 5);
+                    p.setNivelUrgencia(nivel);
+
+                    if (!especialidade.equalsIgnoreCase("null") && !especialidade.equalsIgnoreCase("N/D")) {
+                        p.setEspecialidadeDesejada(especialidade);
+                    }
+
+                    p.setTempoEspera(tempoEspera);
+                    p.setEmAtendimento(false); // Histórico não está em atendimento
+
+                    lista[i++] = p;
+                }
+            }
+        } catch (Exception e) { // <--- USAMOS EXCEPTION EM VEZ DE IOEXCEPTION
+            System.out.println(" Erro ao ler histórico: " + e.getMessage());
         }
         return lista;
     }
