@@ -403,7 +403,7 @@ public class GestaoHospital {
 
                 if (!jaTem) {
                     p.adicionarSintoma(selecionado);
-                    System.out.println("✓ Sintoma adicionado: " + selecionado.getNome());
+                    System.out.println(" Sintoma adicionado: " + selecionado.getNome());
                 } else {
                     System.out.println(">> O paciente já tem esse sintoma registado.");
                 }

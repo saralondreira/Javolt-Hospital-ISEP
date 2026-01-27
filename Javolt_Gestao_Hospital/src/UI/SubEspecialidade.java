@@ -20,10 +20,7 @@ public class SubEspecialidade {
 
             switch (opcao) {
                 case 1 -> adicionarEspecialidade(gestaoHospital);
-                case 2 -> {
-                    gestaoHospital.listarEspecialidades();
-                   InputsAuxiliares.pausar();
-                }
+                case 2 -> {gestaoHospital.listarEspecialidades();InputsAuxiliares.pausar();}
                 case 3 -> atualizarEspecialidade(gestaoHospital);
                 case 4 -> removerEspecialidade(gestaoHospital);
                 case 0 -> System.out.println("<< A voltar...");
