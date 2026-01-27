@@ -190,6 +190,9 @@ public class ConsultaEstatistica {
         System.out.printf("Pacientes com especialidade definida: %d%n", totalPacientesComEspecialidade);
         System.out.printf("Pacientes sem especialidade: %d%n",
                 totalPacientes - totalPacientesComEspecialidade);
+        if (totalEspecialidades > 3) {
+            System.out.println("Nota: Existem mais " + (totalEspecialidades - 3) + " especialidades com menos procura.");
+        }
         System.out.println("=".repeat(50));
     }
 }

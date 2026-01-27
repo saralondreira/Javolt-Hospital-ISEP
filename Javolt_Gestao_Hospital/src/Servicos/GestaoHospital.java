@@ -88,6 +88,14 @@ public class GestaoHospital {
                         sintomas[totalSintomas++] = s;
                 }
             }
+            Paciente[] histLidos = leitor.lerHistoricoPacientes(caminho + "pacientes_historico.txt");
+            if (histLidos != null) {
+                for (Paciente p : histLidos) {
+                    if (p != null && totalHistorico < historicoPacientes.length) {
+                        historicoPacientes[totalHistorico++] = p;
+                    }
+                }
+            }
 
             InputsAuxiliares.imprimirSucesso("Dados carregados com sucesso!");
 
@@ -338,7 +346,7 @@ public class GestaoHospital {
 
         // 2. Adicionar ao Histórico (Para estatísticas)
         if (totalHistorico < historicoPacientes.length) {
-            historicoPacientes[totalHistorico++] = p; // Usa e incrementa totalHistorico
+            historicoPacientes[totalHistorico++] = p;
         }
 
         return true;
@@ -449,6 +457,12 @@ public class GestaoHospital {
         // 2. CALCULAR URGÊNCIA E ESPECIALIDADE (conforme enunciado)
         p.calcularUrgenciaEEspecialidade();
 
+        if (p.getEspecialidadeDesejada() == null ||
+                p.getEspecialidadeDesejada().equals("N/D") ||
+                p.getEspecialidadeDesejada().equalsIgnoreCase("null")) {
+
+            p.setEspecialidadeDesejada("Clinica Geral");
+        }
         // 3. REGISTAR PACIENTE
         if (adicionarPaciente(p)) {
             InputsAuxiliares.imprimirSucesso("PACIENTE REGISTADO COM SUCESSO!");
@@ -640,7 +654,7 @@ public class GestaoHospital {
 
             // Guardar Pacientes (histórico)
             bw = new java.io.BufferedWriter(
-                    new java.io.FileWriter(caminho + "pacientes_historico.txt", true)); // Append
+                    new java.io.FileWriter(caminho + "pacientes_historico.txt"));
             for (int i = 0; i < totalPacientes; i++) {
                 Paciente p = pacientes[i];
                 bw.write(p.getNome() + ";" + p.getNivelUrgencia() + ";" +
@@ -658,7 +672,7 @@ public class GestaoHospital {
             gestor.escreverLog("logs.txt",
                     "Dados guardados com sucesso ao encerrar (Dia " + gestorDeTurnos.getDiasDecorridos() + ")");
 
-        } catch (java.io.IOException e) {
+        } catch (Exception e) {
             InputsAuxiliares.imprimirErro("Erro ao guardar dados: " + e.getMessage());
         }
     }
