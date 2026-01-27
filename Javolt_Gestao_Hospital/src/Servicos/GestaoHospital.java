@@ -655,11 +655,17 @@ public class GestaoHospital {
             // Guardar Pacientes (histórico)
             bw = new java.io.BufferedWriter(
                     new java.io.FileWriter(caminho + "pacientes_historico.txt"));
-            for (int i = 0; i < totalPacientes; i++) {
-                Paciente p = pacientes[i];
-                bw.write(p.getNome() + ";" + p.getNivelUrgencia() + ";" +
-                        p.getEspecialidadeDesejada() + ";" + p.getTempoEspera());
-                bw.newLine();
+            for (int i = 0; i < totalHistorico; i++) { // Usar totalHistorico!
+                Paciente p = historicoPacientes[i];    // Usar array historicoPacientes!
+                if (p != null) {
+                    String esp = (p.getEspecialidadeDesejada() != null) ? p.getEspecialidadeDesejada() : "N/D";
+
+                    bw.write(p.getNome() + ";" +
+                            p.getNivelUrgencia() + ";" +
+                            esp + ";" +
+                            p.getTempoEspera());
+                    bw.newLine();
+                }
             }
             bw.close();
 
