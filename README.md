@@ -6,7 +6,7 @@ This project consists of a Java application designed to simulate and manage hosp
 
 ## 👥 The "Javolt" Team
 Developed by:
-* **Sara [Your Surname]**
+* **Sara Londreira**
 * Levi
 * Leonardo
 * Micael
@@ -37,11 +37,11 @@ The application allows the Hospital Manager to:
 
 > **Projeto desenvolvido no âmbito da Unidade Curricular de Laboratório de Projeto 1 (LAPR1) - ISEP 2025/2026.**
 
-[cite_start]Este projeto consiste numa aplicação Java para simulação e gestão de um serviço de urgências hospitalar, aplicando conceitos de Programação Orientada a Objetos, persistência de dados e gestão de estruturas dinâmicas sem a utilização de coleções automáticas (ArrayLists)[cite: 17, 177].
+Este projeto consiste numa aplicação Java para simulação e gestão de um serviço de urgências hospitalar, aplicando conceitos de Programação Orientada a Objetos, persistência de dados e gestão de estruturas dinâmicas sem a utilização de coleções automáticas (ArrayLists).
 
 ## 👥 Equipa "Javolt"
 Projeto desenvolvido em grupo por:
-* **Sara [Teu Sobrenome]** (a.k.a Aluno 4)
+* **Sara Londreira** (a.k.a Aluno 4)
 * Levi
 * Leonardo
 * Micael
@@ -54,15 +54,15 @@ Embora seja um projeto colaborativo, fui responsável pela arquitetura de intera
 
 ## ⚙️ Funcionalidades Principais
 A aplicação permite ao Gestor Hospitalar:
-* [cite_start]**Triagem Inteligente:** Cálculo automático da gravidade e especialidade com base nos sintomas apresentados[cite: 94].
-* [cite_start]**Gestão de Turnos:** Simulação de avanço temporal (unidades de tempo) com gestão de pausas obrigatórias para médicos[cite: 115, 118].
-* [cite_start]**Estatísticas:** Análise de tempos de espera, doentes por especialidade e faturação médica[cite: 103].
-* [cite_start]**Persistência:** Todos os dados (Médicos, Pacientes, Histórico) são guardados em ficheiros de texto (`.txt`)[cite: 137].
+* **Triagem Inteligente:** Cálculo automático da gravidade e especialidade com base nos sintomas apresentados.
+* **Gestão de Turnos:** Simulação de avanço temporal (unidades de tempo) com gestão de pausas obrigatórias para médicos.
+* **Estatísticas:** Análise de tempos de espera, doentes por especialidade e faturação médica.
+* **Persistência:** Todos os dados (Médicos, Pacientes, Histórico) são guardados em ficheiros de texto (`.txt`).
 
 ## 🚀 Tecnologias
 * **Linguagem:** Java
 * **Conceitos:** Polimorfismo, Herança, Manipulação de Ficheiros, Algoritmia.
-* [cite_start]**Restrições Académicas:** Proibição de uso de `ArrayList` (uso exclusivo de Arrays estáticos)[cite: 177].
+* **Restrições Académicas:** Proibição de uso de `ArrayList` (uso exclusivo de Arrays estáticos).
 
 ---
 *Instituto Superior de Engenharia do Porto - Licenciatura em Engenharia Informática*
